@@ -463,11 +463,11 @@ html[data-font-size="large"] .navsub{
   font-size:13px !important;
 }
 
-/* iPhone landscape Dynamic Island protection */
-@media (orientation:landscape) and (max-height:500px){
+/* iPhone landscape Dynamic Island adjustment */
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
 
-  .side{
-    padding-left:8px !important;
+  .side {
+    padding-left: 18px !important;
   }
 
 }
