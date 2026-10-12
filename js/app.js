@@ -1,5 +1,5 @@
 const C=window.WINE_DATA;
-updated='7 October 2026';
+updated='13 October 2026';
 const totalSelections=C.reduce((total,category)=>total+category.sections.reduce((sum,section)=>sum+section.items.length,0),0);let current=C[0].id;const nav=document.querySelector('#nav'),main=document.querySelector('#main'),q=document.querySelector('#q'),st=document.querySelector('#st'),meta=document.querySelector('#meta');const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const n=c=>c.sections.reduce((a,s)=>a+s.items.length,0);
 let lang=localStorage.getItem('wineListLanguage')==='zh'?'zh':'en';
 let fontSize=localStorage.getItem('wineListFontSize')||'normal';
