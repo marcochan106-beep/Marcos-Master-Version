@@ -318,11 +318,11 @@ body{font-size:calc(16px * var(--font-scale))}
 
 /* Persistent stock-status controls */
 .v{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
-.stock-dot{position:relative;width:13px;height:13px;min-width:13px;padding:0;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px rgba(32,27,22,.28),0 1px 3px rgba(32,27,22,.25);cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}.stock-dot.in-stock{background:#2f9e44}.stock-dot.sold-out{background:#c92a2a}.stock-dot.holding{transform:scale(1.28);box-shadow:0 0 0 5px rgba(182,135,53,.32)}
+.stock-dot{position:relative;display:inline-block;width:28px;height:28px;min-width:28px;flex:0 0 28px;padding:0;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 1px rgba(32,27,22,.28),0 1px 3px rgba(32,27,22,.25);cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}.stock-dot.in-stock{background:#2f9e44}.stock-dot.sold-out{background:#c92a2a}.stock-dot.holding{transform:scale(1.28);box-shadow:0 0 0 5px rgba(182,135,53,.32)}
 .wine.sold-out{border-color:rgba(201,42,42,.42)}.wine.sold-out .row,.wotm-feature.sold-out .wotm-grid,.wotm-feature.sold-out .wotm-copy{opacity:.48}.wine.sold-out .stock-dot,.wotm-feature.sold-out .stock-dot{opacity:1}.mark-wine:disabled{cursor:not-allowed;opacity:.45;filter:grayscale(.5)}
 .wotm-vintage{display:flex;align-items:center;gap:10px}.wotm-vintage .stock-dot{display:inline-block}
 .stock-dialog{width:min(420px,calc(100% - 32px));padding:0;border:1px solid #cdbb9e;border-radius:16px;background:#fffdf8;color:var(--ink);box-shadow:0 24px 70px rgba(23,20,17,.32)}.stock-dialog::backdrop{background:rgba(23,20,17,.48);backdrop-filter:blur(2px)}.stock-dialog-card{padding:24px}.stock-dialog-title{margin:0 0 9px;color:#76521d;font-family:Georgia,serif;font-size:24px;text-transform:none;letter-spacing:0;border:0}.stock-dialog-copy{margin:0;color:var(--muted);line-height:1.5}.stock-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}.stock-dialog-actions button{padding:9px 15px;border-radius:8px;font-weight:800;cursor:pointer}.stock-cancel{border:1px solid var(--line);background:#fff;color:var(--muted)}.stock-confirm{border:1px solid var(--gold);background:var(--gold);color:#171411}
-@media (max-width:768px){.v{grid-row:1 / span 2}.stock-dot{width:14px;height:14px;min-width:14px}.wotm-vintage{justify-content:center}}
+@media (max-width:768px){.v{grid-row:1 / span 2}.stock-dot{width:28px;height:28px;min-width:28px;flex-basis:28px}.wotm-vintage{justify-content:center}}
 
 /* MacBook and laptop layout correction */
 .row{
@@ -356,3 +356,10 @@ body{font-size:calc(16px * var(--font-scale))}
   .row{grid-template-columns:44px minmax(0,1fr)}
   .price{min-width:0;justify-self:stretch;text-align:left;white-space:normal}
 }
+
+
+/* Eight-hour staff mode */
+.staff-mode-btn{margin-left:8px;min-width:48px;padding:7px 10px;border:1px solid #b68735;border-radius:7px;background:#fffaf0;color:#756a5d;font-size:13px;font-weight:800;line-height:1;cursor:pointer;white-space:nowrap}
+.staff-mode-btn:hover,.staff-mode-btn:focus-visible{background:#f3e5c6;outline:none}.staff-mode-btn.unlocked{background:#2f9e44;border-color:#247d35;color:#fff}
+.staff-dialog{width:min(410px,calc(100% - 32px));padding:0;border:1px solid #cdbb9e;border-radius:16px;background:#fffdf8;color:var(--ink);box-shadow:0 24px 70px rgba(23,20,17,.32)}.staff-dialog::backdrop{background:rgba(23,20,17,.48);backdrop-filter:blur(2px)}.staff-dialog-card{padding:24px}.staff-dialog-title{margin:0 0 9px;color:#76521d;font-family:Georgia,serif;font-size:24px}.staff-dialog-copy{margin:0 0 16px;color:var(--muted);line-height:1.5}.staff-password{display:block;width:100%;padding:11px 12px;border:1px solid #cdbb9e;border-radius:8px;background:#fff;color:var(--ink);outline:none}.staff-password:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(182,135,53,.18)}.staff-error{margin:9px 0 0;color:#b42318;font-size:12px;font-weight:700}.staff-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}.staff-dialog-actions button{padding:9px 15px;border-radius:8px;font-weight:800;cursor:pointer}.staff-cancel{border:1px solid var(--line);background:#fff;color:var(--muted)}.staff-unlock{border:1px solid var(--gold);background:var(--gold);color:#171411}
+@media (max-width:768px){.staff-mode-btn{margin-left:6px;padding:7px 8px}.staff-mode-btn.unlocked{min-width:82px}}
