@@ -464,10 +464,9 @@ html[data-font-size="large"] .navsub{
 }
 
 /* iPhone landscape Dynamic Island adjustment */
-@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
-
-  .side {
-    padding-left: 18px !important;
+@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){
+  .side{
+    padding-left:max(18px, env(safe-area-inset-left, 0px)) !important;
+    padding-right:14px !important;
   }
-
 }
