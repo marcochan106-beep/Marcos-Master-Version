@@ -467,7 +467,7 @@ html[data-font-size="large"] .navsub{
 @media (orientation:landscape) and (max-height:500px){
 
   .side{
-    padding-left:24px !important;
+    padding-left:8px !important;
   }
 
 }
