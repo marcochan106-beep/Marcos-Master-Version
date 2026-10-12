@@ -464,20 +464,10 @@ html[data-font-size="large"] .navsub{
 }
 
 /* iPhone landscape Dynamic Island protection */
-@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){
-
-  .app{
-    grid-template-columns:
-      calc(300px + env(safe-area-inset-left, 0px))
-      minmax(0,1fr);
-  }
+@media (orientation:landscape) and (max-height:500px){
 
   .side{
-    left:0;
-    width:calc(300px + env(safe-area-inset-left, 0px));
-    padding-top:18px;
-    padding-right:14px;
-    padding-bottom:30px;
-    padding-left:calc(16px + env(safe-area-inset-left, 0px));
+    padding-left:24px !important;
   }
+
 }
