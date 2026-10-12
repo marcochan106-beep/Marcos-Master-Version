@@ -20,6 +20,15 @@ let markedWines=[];
 let pendingJumpKey='';
 const markerStatus=document.createElement('div');markerStatus.className='marker-status';markerStatus.hidden=true;document.querySelector('.status').appendChild(markerStatus);
 function wineKey(x){return [x.v,x.name,x.price].join('|');}
+const STOCK_STORAGE_KEY='wineListStockStatus';
+let stockStatus={};
+try{stockStatus=JSON.parse(localStorage.getItem(STOCK_STORAGE_KEY)||'{}')||{};}catch(e){stockStatus={};}
+function isSoldOut(key){return stockStatus[key]==='out';}
+function saveStockStatus(){localStorage.setItem(STOCK_STORAGE_KEY,JSON.stringify(stockStatus));}
+function stockDotHtml(key){const sold=isSoldOut(key),label=lang==='zh'?(sold?'售罄，按住三秒更改':'有貨，按住三秒更改'):(sold?'Sold out. Hold for three seconds to change':'In stock. Hold for three seconds to change');return `<span class="stock-dot ${sold?'sold-out':'in-stock'}" data-stock-key="${esc(key)}" role="button" tabindex="0" aria-label="${esc(label)}" title="${esc(label)}"></span>`;}
+const stockDialog=document.createElement('dialog');stockDialog.className='stock-dialog';stockDialog.innerHTML='<form method="dialog" class="stock-dialog-card"><h3 class="stock-dialog-title"></h3><p class="stock-dialog-copy"></p><div class="stock-dialog-actions"><button value="cancel" class="stock-cancel"></button><button value="confirm" class="stock-confirm"></button></div></form>';document.body.appendChild(stockDialog);
+function confirmStockChange(key){const sold=isSoldOut(key),nextSold=!sold;stockDialog.querySelector('.stock-dialog-title').textContent=lang==='zh'?(nextSold?'標記為售罄？':'標記為有貨？'):(nextSold?'Mark as sold out?':'Mark as in stock?');stockDialog.querySelector('.stock-dialog-copy').textContent=lang==='zh'?(nextSold?'確認後，此酒將顯示為售罄，並不能被選取。':'確認後，此酒將重新顯示為有貨。'):(nextSold?'This wine will appear sold out and cannot be selected.':'This wine will appear in stock again.');stockDialog.querySelector('.stock-cancel').textContent=lang==='zh'?'取消':'Cancel';stockDialog.querySelector('.stock-confirm').textContent=lang==='zh'?'確認':'Confirm';stockDialog.returnValue='';stockDialog.showModal();stockDialog.onclose=()=>{if(stockDialog.returnValue!=='confirm')return;if(nextSold)stockStatus[key]='out';else delete stockStatus[key];saveStockStatus();if(nextSold&&markedWines[0]?.key===key)markedWines=[];render();updateMarkerUI();};}
+function bindStockDots(){main.querySelectorAll('.stock-dot').forEach(dot=>{let timer=null;const stop=()=>{if(timer)clearTimeout(timer);timer=null;dot.classList.remove('holding');};dot.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();stop();dot.classList.add('holding');timer=setTimeout(()=>{timer=null;dot.classList.remove('holding');confirmStockChange(dot.dataset.stockKey);},3000);});['pointerup','pointercancel','pointerleave'].forEach(type=>dot.addEventListener(type,e=>{e.stopPropagation();stop();}));dot.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();});dot.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();confirmStockChange(dot.dataset.stockKey);}});dot.addEventListener('contextmenu',e=>e.preventDefault());});}
 function markerText(x){return (x.v?x.v+' · ':'')+x.name;}
 function wineType(sectionName,categoryTitle,x){const text=(sectionName+' '+categoryTitle+' '+(x.style||'')+' '+(x.name||'')).toLowerCase();if(/champagne|sparkling|prosecco|cava|franciacorta|sekt/.test(text))return'sparkling';if(/dessert|sauternes|barsac|tokaji|moscato|sweet|port|madeira|sherry/.test(text))return'dessert';if(/rosé|rose/.test(text))return'rose';if(/red|rouge|rosso|tinto|barolo|barbaresco|burgundy rouge/.test(text))return'red';if(/white|blanc|bianco|chablis|riesling|sauvignon|chardonnay/.test(text))return'white';return'other';}
 function typeIcon(type){return{sparkling:'✦',white:'●',red:'●',rose:'●',dessert:'◆',other:'○'}[type]||'○';}
@@ -29,7 +38,7 @@ function servingChoices(x){if(x.categoryId==='c0')return[{id:'bottle',label:'Bot
 function serviceControlsHtml(x,index){const choices=servingChoices(x);if(!choices.length)return'';const formats=`<div class="format-controls">${choices.map(choice=>`<button type="button" class="format-btn ${x.format===choice.id?'active':''}" data-index="${index}" data-format="${choice.id}">${choice.label}</button>`).join('')}</div>`;if(x.format!=='glass')return `<div class="service-controls">${formats}</div>`;const seats=Array.from({length:6},(_,i)=>`<button type="button" class="seat-btn ${x.seats.includes(i+1)?'active':''}" data-index="${index}" data-seat="${i+1}">S${i+1}</button>`).join('');return `<div class="service-controls">${formats}<div class="glass-controls"><div class="glass-quantity"><button type="button" class="glass-step" data-index="${index}" data-step="-1" aria-label="Decrease glasses">−</button><span>${x.glasses} ${x.glasses===1?(lang==='zh'?'杯':'glass'):(lang==='zh'?'杯':'glasses')}</span><button type="button" class="glass-step" data-index="${index}" data-step="1" aria-label="Increase glasses">+</button></div><div class="seat-controls-wrapper"><span class="seat-label">${lang==='zh'?'內部使用':'For Internal Use'}</span><div class="seat-controls" aria-label="Seat codes">${seats}</div></div></div></div>`;}
 function markedEntryHtml(x,index){return `<div class="marker-row" data-key="${esc(x.key)}"><div class="marker-row-main"><button type="button" class="marker-jump" data-index="${index}" title="${lang==='zh'?'前往此酒':'Jump to this wine'}"><span class="wine-type type-${esc(x.type)}" aria-hidden="true">${typeIcon(x.type)}</span><span class="marker-status-label">${esc(markerText(x))}</span></button><button type="button" class="marker-remove" data-index="${index}" aria-label="${lang==='zh'?'移除此酒':'Remove this wine'}">×</button></div>${serviceControlsHtml(x,index)}</div>`;}
 function updateMarkerUI(){const has=markedWines.length>0;document.querySelector('.status').classList.toggle('has-marker',has);markerStatus.hidden=!has;if(has){markerStatus.innerHTML=`<div class="marker-toolbar"><b>${lang==='zh'?'已選酒款':'Selected wine'}</b><button type="button" class="marker-clear-all">${lang==='zh'?'清除':'Clear'}</button></div><div class="marker-list">${markedWines.map(markedEntryHtml).join('')}</div>`;markerStatus.querySelector('.marker-clear-all').onclick=()=>{markedWines=[];updateMarkerUI();};markerStatus.querySelectorAll('.marker-remove').forEach(btn=>btn.onclick=e=>{e.stopPropagation();markedWines.splice(Number(btn.dataset.index),1);updateMarkerUI();});markerStatus.querySelectorAll('.marker-jump').forEach(btn=>btn.onclick=()=>jumpToMarked(Number(btn.dataset.index)));markerStatus.querySelectorAll('.format-btn').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const x=markedWines[Number(btn.dataset.index)];if(!x)return;x.format=btn.dataset.format;updateMarkerUI();});markerStatus.querySelectorAll('.glass-step').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const x=markedWines[Number(btn.dataset.index)];if(!x)return;x.glasses=Math.max(1,Math.min(5,x.glasses+Number(btn.dataset.step)));if(x.seats.length>x.glasses){x.seats=x.seats.slice(0,x.glasses);}updateMarkerUI();});markerStatus.querySelectorAll('.seat-btn').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const x=markedWines[Number(btn.dataset.index)],seat=Number(btn.dataset.seat);if(!x)return;x.seats=x.seats.includes(seat)?x.seats.filter(n=>n!==seat):(x.seats.length<x.glasses?[...x.seats,seat].sort((a,b)=>a-b):x.seats);updateMarkerUI();});}const keys=new Set(markedWines.map(x=>x.key));document.querySelectorAll('.wine,.wotm-feature').forEach(el=>el.classList.toggle('marked',keys.has(el.dataset.wineKey)));}
-function addMarkedWine(data){if(markedWines[0]?.key===data.key)return;markedWines=[data];updateMarkerUI();}
+function addMarkedWine(data){if(isSoldOut(data.key)||markedWines[0]?.key===data.key)return;markedWines=[data];updateMarkerUI();}
 function jumpToMarked(index){const selected=markedWines[index];if(!selected)return;current=selected.categoryId;openCat='';activeGroup=null;q.value='';pendingJumpKey=selected.key;navR();render();requestAnimationFrame(()=>requestAnimationFrame(()=>{const target=[...document.querySelectorAll('.wine,.wotm-feature')].find(el=>el.dataset.wineKey===pendingJumpKey);if(target){target.classList.add('jump-pulse');target.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>target.classList.remove('jump-pulse'),1600);}pendingJumpKey='';}));}
 function bindMarkButtons(){main.querySelectorAll('.mark-wine').forEach(btn=>{let timer=null,done=false;const stop=()=>{if(timer)clearTimeout(timer);timer=null;btn.classList.remove('holding');};const start=e=>{e.preventDefault();done=false;stop();btn.classList.add('holding');timer=setTimeout(()=>{const key=btn.dataset.key;addMarkedWine({key,v:btn.dataset.v,name:btn.dataset.name,price:btn.dataset.price,type:btn.dataset.type,categoryId:btn.dataset.category,byGlass:isByTheGlass(btn.dataset.price),format:'bottle',glasses:1,seats:[]});done=true;btn.classList.remove('holding');},800);};btn.addEventListener('pointerdown',start);btn.addEventListener('pointerup',stop);btn.addEventListener('pointercancel',stop);btn.addEventListener('pointerleave',stop);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(!done)btn.classList.remove('holding');});});updateMarkerUI();}
 // Navigation intentionally begins hierarchical browsing only after Sommelier Selection.
@@ -159,38 +168,40 @@ function navR(){
 });
 }
 function card(x,category,section){
-  return `<article class="wine" data-wine-key="${esc(wineKey(x))}">
+  const key=wineKey(x),sold=isSoldOut(key);
+  return `<article class="wine ${sold?'sold-out':''}" data-wine-key="${esc(key)}">
     <button class="row" aria-expanded="false">
-      <span class="v">${x.v}</span>
+      <span class="v"><span>${x.v}</span>${stockDotHtml(key)}</span>
       <span class="name">${esc(x.name)}</span>
       <span class="price">
 ${esc(x.price).replace(/ · /g,'<br>')}
 </span>
       <span class="plus">+</span>
     </button>
-    <div class="inside"><div>${esc(x.note).replace(/\n/g,'<br>')}</div><button type="button" class="mark-wine" data-key="${esc(wineKey(x))}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(x.name)}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button></div>
+    <div class="inside"><div>${esc(x.note).replace(/\n/g,'<br>')}</div><button type="button" class="mark-wine" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(x.name)}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button></div>
   </article>`
 }
 function featureNote(note){
   return String(note??'').split(/\n\s*\n/).filter(Boolean).map(p=>`<p>${esc(p)}</p>`).join('');
 }
 function featureCard(x,category,section){
+  const key=wineKey(x),sold=isSoldOut(key);
   const image=x.image?`<div class="feature-media"><img src="${esc(x.image)}" alt="${esc(lang==='zh'?(x.imageAltZh||x.imageAlt||pick(x,'name')):(x.imageAlt||x.name))}" loading="eager" onerror="this.closest('.feature-media').classList.add('image-error');this.remove()"><div class="feature-image-fallback">1982<br>Château Cos d’Estournel</div></div>`:'';
-  return `<section class="wotm-feature" data-wine-key="${esc(wineKey(x))}">
+  return `<section class="wotm-feature ${sold?'sold-out':''}" data-wine-key="${esc(key)}">
     <div class="wotm-ribbon">${esc(ui().featured)}</div>
     <div class="wotm-grid">
       ${image}
       <div class="wotm-summary">
-        <div class="wotm-vintage">${esc(x.v)}</div>
+        <div class="wotm-vintage"><span>${esc(x.v)}</span>${stockDotHtml(key)}</div>
         <h2>${esc(pick(x,'name'))}</h2>
         <div class="wotm-prices">${String(pick(x,'price')??'').split(/\s*·\s*/).filter(Boolean).map(price=>`<div class="wotm-price-line">${esc(price)}</div>`).join('')}</div>
       </div>
     </div>
     <div class="wotm-copy">${featureNote(pick(x,'note'))}</div>
-    <button type="button" class="mark-wine feature-mark" data-key="${esc(wineKey(x))}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(x.name)}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button>
+    <button type="button" class="mark-wine feature-mark" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(x.name)}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button>
   </section>`;
 }
-function bind(){main.querySelectorAll('.row').forEach(b=>b.onclick=()=>{const a=b.closest('.wine'),o=a.classList.toggle('open');b.setAttribute('aria-expanded',o)});bindMarkButtons();}function render(){const query=q.value.trim().toLowerCase();if(query){let groups=[];C.forEach(c=>c.sections.forEach(s=>{let items=s.items.filter(x=>(c.title+' '+s.name+' '+x.v+' '+x.name+' '+x.price+' '+x.note).toLowerCase().includes(query));if(items.length)groups.push({title:c.title+' · '+s.name,items,category:c,section:s})}));let count=groups.reduce((a,g)=>a+g.items.length,0);st.textContent='Search results';meta.textContent=totalSelections+' selections · Updated '+updated;main.innerHTML=`<section class="hero"><div class="kicker">Search</div><h2>${esc(q.value)}</h2><p>${count} matching selections</p></section>`+(groups.length?groups.map(g=>`<section class="section"><h3>${esc(g.title)}</h3>${g.items.map(x=>card(x,g.category,g.section)).join('')}</section>`).join(''):'<div class="empty">No matching selection found.</div>');bind();return}let c=C.find(x=>x.id===current)||C[0];st.textContent='';meta.textContent=totalSelections+' '+ui().selections+' · '+ui().updated+' '+updated;const sectionKey=value=>String(value??'')
+function bind(){main.querySelectorAll('.row').forEach(b=>b.onclick=()=>{const a=b.closest('.wine'),o=a.classList.toggle('open');b.setAttribute('aria-expanded',o)});bindStockDots();bindMarkButtons();}function render(){const query=q.value.trim().toLowerCase();if(query){let groups=[];C.forEach(c=>c.sections.forEach(s=>{let items=s.items.filter(x=>(c.title+' '+s.name+' '+x.v+' '+x.name+' '+x.price+' '+x.note).toLowerCase().includes(query));if(items.length)groups.push({title:c.title+' · '+s.name,items,category:c,section:s})}));let count=groups.reduce((a,g)=>a+g.items.length,0);st.textContent='Search results';meta.textContent=totalSelections+' selections · Updated '+updated;main.innerHTML=`<section class="hero"><div class="kicker">Search</div><h2>${esc(q.value)}</h2><p>${count} matching selections</p></section>`+(groups.length?groups.map(g=>`<section class="section"><h3>${esc(g.title)}</h3>${g.items.map(x=>card(x,g.category,g.section)).join('')}</section>`).join(''):'<div class="empty">No matching selection found.</div>');bind();return}let c=C.find(x=>x.id===current)||C[0];st.textContent='';meta.textContent=totalSelections+' '+ui().selections+' · '+ui().updated+' '+updated;const sectionKey=value=>String(value??'')
   .normalize('NFD')
   .replace(/[\u0300-\u036f]/g,'')
   .toLowerCase()
@@ -205,6 +216,7 @@ let sections=group
 if(c.id==='c0'&&!group){
   const item=c.sections[0]?.items?.[0];
   main.innerHTML=`<section class="hero hero-wotm"><div class="kicker">Tin Lung Heen</div><h2>${esc(ui().heroTitle)}</h2><p>${esc(ui().heroSub)}</p></section>`+(item?featureCard(item,c,c.sections[0]):`<div class="empty">${esc(ui().noFeature)}</div>`)+`<div class="legal">${esc(ui().legal)}</div>`;
+  bindStockDots();
   bindMarkButtons();
   return;
 }
