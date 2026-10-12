@@ -420,10 +420,10 @@ body{font-size:calc(16px * var(--font-scale))}
   font-size:13px !important;
 }
 html[data-font-size="large"] .nav button{
-  font-size:17px !important;
+  font-size:19px !important;
 }
 html[data-font-size="large"] .navsub{
-  font-size:13px !important;
+  font-size:15px !important;
 }
 
 /* Balanced sidebar on iPad and when a desktop browser is zoomed */
@@ -461,4 +461,13 @@ html[data-font-size="large"] .navsub{
 
 .staff-mode-btn{
   font-size:13px !important;
+}
+
+/* iPhone landscape safe area */
+@media (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+
+  .side{
+    padding-left:max(14px, env(safe-area-inset-left));
+  }
+
 }
