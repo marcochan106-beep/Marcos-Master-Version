@@ -471,3 +471,11 @@ html[data-font-size="large"] .navsub{
   }
 
 }
+
+@media (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+
+  .side{
+    left: 50px !important;
+  }
+
+}
