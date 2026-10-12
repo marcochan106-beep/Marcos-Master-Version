@@ -106,11 +106,30 @@
   }
 }
 
+/* Hierarchical navigation */
+.navgroup{margin:2px 0}
+.navcat{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 18px;
+  gap:8px;
+  align-items:start;
+}
 .navcat > span:first-child{
   min-width:0;
-  white-space:nowrap;
-}.navcat .chev{width:16px;text-align:center;color:#c8a75c}.subnav{display:none;padding:3px 0 8px 13px;border-left:1px solid rgba(214,183,109,.35);margin-left:10px}.subnav.show{display:block}.navsub{display:block!important;font-size:12px!important;padding:8px 10px!important;color:#cfcac3!important}.navsub.active{background:rgba(182,135,53,.28)!important;color:#fff!important}
-
+  white-space:normal;
+  overflow-wrap:break-word;
+  word-break:normal;
+}
+.navcat .chev{
+  width:18px;
+  text-align:center;
+  color:#c8a75c;
+  line-height:1.25;
+}
+.subnav{display:none;padding:3px 0 8px 13px;border-left:1px solid rgba(214,183,109,.35);margin-left:10px}
+.subnav.show{display:block}
+.navsub{display:block!important;font-size:12px!important;padding:8px 10px!important;color:#cfcac3!important;white-space:normal;overflow-wrap:break-word}
+.navsub.active{background:rgba(182,135,53,.28)!important;color:#fff!important}
 .featured-star {
   color: #e6c477;
   margin-right: 6px;
@@ -383,29 +402,31 @@ body{font-size:calc(16px * var(--font-scale))}
 .staff-dialog{width:min(410px,calc(100% - 32px));padding:0;border:1px solid #cdbb9e;border-radius:16px;background:#fffdf8;color:var(--ink);box-shadow:0 24px 70px rgba(23,20,17,.32)}.staff-dialog::backdrop{background:rgba(23,20,17,.48);backdrop-filter:blur(2px)}.staff-dialog-card{padding:24px}.staff-dialog-title{margin:0 0 9px;color:#76521d;font-family:Georgia,serif;font-size:24px}.staff-dialog-copy{margin:0 0 16px;color:var(--muted);line-height:1.5}.staff-password{display:block;width:100%;padding:11px 12px;border:1px solid #cdbb9e;border-radius:8px;background:#fff;color:var(--ink);outline:none}.staff-password:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(182,135,53,.18)}.staff-error{margin:9px 0 0;color:#b42318;font-size:12px;font-weight:700}.staff-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}.staff-dialog-actions button{padding:9px 15px;border-radius:8px;font-weight:800;cursor:pointer}.staff-cancel{border:1px solid var(--line);background:#fff;color:var(--muted)}.staff-unlock{border:1px solid var(--gold);background:var(--gold);color:#171411}
 @media (max-width:768px){.staff-mode-btn{margin-left:6px;padding:7px 8px}.staff-mode-btn.unlocked{min-width:82px}}
 
-/* Final iPad sidebar correction */
-@media (min-width:601px) and (ma*-width:1100px){
-  .app{
-    grid-t*mplate-columns:340px minmax(0,1fr)*!important;
-  }
+/* Final responsive navigation correction */
+.nav button{
+  font-size:15px !important;
+}
+.navsub{
+  font-size:12px !important;
+}
+html[data-font-size="large"] .nav button{
+  font-size:15px !important;
+}
+html[data-font-size="large"] .navsub{
+  font-size:12px !important;
+}
 
-  .side{
-    widt**340px !important;
-    padding-left*16px;
-    padding-right:16px;
-  }
-*  .navcat{
-    grid-template-colum*s:minmax(0,1fr) 16px !important;
- *  gap:6px;
- *}
+/* Balanced sidebar on iPad and when a desktop browser is zoomed */
+@media (min-width:601px) and (max-width:900px){
+  .app{grid-template-columns:300px minmax(0,1fr)}
+  .side{width:300px;padding:18px 14px 30px}
+  .nav button{padding-left:9px;padding-right:7px}
+  .navcat{grid-template-columns:minmax(0,1fr) 18px;gap:6px}
+}
 
-  .navcat > span:first-child{
- *  min-width:0;
-    white-space:now*ap !important;
-    font*size:16px;
-  }
-
-* .featured-star{
-    margin-right:*px;
-  }
+/* At very narrow effective widths, stack the index instead of crushing it */
+@media (max-width:600px){
+  .app{display:block}
+  .side{position:relative;width:100%;inset:auto}
+  .shell{width:100%}
 }
