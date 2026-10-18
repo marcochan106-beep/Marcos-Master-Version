@@ -280,7 +280,22 @@ if(c.id==='c0'&&!group){
   bindMarkButtons();
   return;
 }
-main.innerHTML=`<section class="hero"><div class="kicker">${esc(ui().brand)}${group?' · '+esc(pick(c,'title')):''}</div><h2>${esc(group?pick(group,'name'):pick(c,'title'))}</h2></section>`+sections.map(s=>`<section class="section"><h3>${esc(pick(s,'name'))}</h3>${s.items.map(x=>card(x,c,s)).join('')}</section>`).join('')+`<div class="legal">${esc(ui().legalGeneral)}</div>`;bind()}q.oninput=render;navR();render();startStockSync();
+main.innerHTML=`<section class="hero"><div class="kicker">${esc(ui().brand)}${group?' · '+esc(pick(c,'title')):''}</div><h2>${esc(group?pick(group,'name'):pick(c,'title'))}</h2></section>`+sections.map(s=>`<section class="section"><h3>${esc(pick(s,'name'))}</h3>${s.items.map(x=>card(x,c,s)).join('')}</section>`).join('')+`<div class="legal">${esc(ui().legalGeneral)}</div>`;bind()}q.oninput=render;
+navR();
+render();
+startStockSync();
+
+if (window.firebase) {
+  firebase
+    .database()
+    .ref('test')
+    .once('value')
+    .then(snapshot => {
+      console.log('Firebase test:', snapshot.val());
+    })
+    .catch(console.error);
+}
+
 
 // Welcome cover: fade away on entry and return after five minutes of inactivity.
 const welcomeCover=document.querySelector('#welcome-cover');
