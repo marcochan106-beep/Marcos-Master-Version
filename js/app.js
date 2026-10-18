@@ -45,17 +45,59 @@ const REMOTE_LOCK_SESSION_KEY='wineListRemoteUnlockUntil';
 const REMOTE_LOCK_SESSION_MS=8*60*60*1000;
 const REMOTE_LOCK_PASSWORD_SHA256='1f542ab39a9dc8885a5fc9044782838dc79883f8bd7073def13994ac5fa082f5';
 let remoteLockEnabled=false;
+let siteEnabled=true;
+
+const siteDisabledOverlay=
+  document.querySelector('#site-disabled');
+
+function applySiteEnabled(){
+  const disabled=!siteEnabled;
+
+  document.body.classList.toggle(
+    'site-disabled-active',
+    disabled
+  );
+
+  if(siteDisabledOverlay){
+    siteDisabledOverlay.hidden=!disabled;
+  }
+}
 const remoteLockOverlay=document.querySelector('#remote-lock'),remoteLockForm=document.querySelector('#remote-lock-form'),remoteLockInput=document.querySelector('#remote-lock-password'),remoteLockError=document.querySelector('#remote-lock-error'),remoteLockTitle=document.querySelector('#remote-lock-title'),remoteLockMessage=document.querySelector('#remote-lock-message');
 function remoteUnlockValid(){return Number(localStorage.getItem(REMOTE_LOCK_SESSION_KEY)||0)>Date.now();}
 function applyRemoteLock(){const locked=remoteLockEnabled&&!remoteUnlockValid();document.body.classList.toggle('remote-lock-active',locked);remoteLockOverlay.hidden=!locked;if(locked){remoteLockError.hidden=true;remoteLockInput.value='';setTimeout(()=>remoteLockInput.focus(),50);}}
 async function sha256(value){const bytes=new TextEncoder().encode(value);const digest=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');}
 remoteLockForm.addEventListener('submit',async event=>{event.preventDefault();const digest=await sha256(remoteLockInput.value);if(digest===REMOTE_LOCK_PASSWORD_SHA256){localStorage.setItem(REMOTE_LOCK_SESSION_KEY,String(Date.now()+REMOTE_LOCK_SESSION_MS));remoteLockError.hidden=true;applyRemoteLock();}else{remoteLockError.hidden=false;remoteLockInput.select();}});
+function startSiteEnabledSync(){
+  const enabledRef=
+    stockDatabase.ref('settings/siteEnabled');
+
+  enabledRef.on(
+    'value',
+    snapshot=>{
+      siteEnabled=
+        snapshot.val()===true;
+
+      applySiteEnabled();
+    },
+    error=>{
+      console.error(
+        'Site-enabled setting unavailable:',
+        error
+      );
+
+      siteEnabled=false;
+      applySiteEnabled();
+    }
+  );
+}
 function startRemoteLockSync(){const settingsRef=stockDatabase.ref('settings/remoteLock');settingsRef.on('value',snapshot=>{const settings=snapshot.val()||{};remoteLockEnabled=settings.enabled===true;remoteLockTitle.textContent=settings.title||'Service Suspended';remoteLockMessage.textContent=settings.message||'Please contact management.';applyRemoteLock();},error=>console.error('Remote lock unavailable:',error));}
 setInterval(()=>{if(remoteLockEnabled)applyRemoteLock();},60000);
 let stockDatabase=null,stockRef=null,stockSyncReady=false;
 function applySharedStock(records){const shared={};Object.values(records||{}).forEach(record=>{if(record&&record.key&&record.status==='out')shared[record.key]='out';});stockStatus=shared;saveLocalStockStatus();if(markedWines[0]&&isSoldOut(markedWines[0].key))markedWines=[];render();updateMarkerUI();}
 async function writeSharedStock(key,sold){saveLocalStockStatus();if(!stockRef)return;const itemRef=stockRef.child(stockId(key));if(sold)await itemRef.set({key,status:'out',updatedAt:firebase.database.ServerValue.TIMESTAMP});else await itemRef.remove();}
-function startStockSync(){if(!window.firebase){console.warn('Firebase SDK unavailable; using this device only.');return;}try{if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);stockDatabase=firebase.database();startRemoteLockSync();stockRef=stockDatabase.ref('wineStock');stockRef.once('value').then(snapshot=>{if(!snapshot.exists()&&Object.keys(initialLocalStockStatus).length){const seed={};Object.keys(initialLocalStockStatus).forEach(key=>{if(initialLocalStockStatus[key]==='out')seed[stockId(key)]={key,status:'out',updatedAt:firebase.database.ServerValue.TIMESTAMP};});if(Object.keys(seed).length)return stockRef.update(seed);}}).catch(console.error);stockRef.on('value',snapshot=>{stockSyncReady=true;applySharedStock(snapshot.val());},error=>{stockSyncReady=false;console.error('Stock sync unavailable:',error);});}catch(error){console.error('Firebase startup failed:',error);}}
+function startStockSync(){if(!window.firebase){console.warn('Firebase SDK unavailable; using this device only.');return;}try{if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);stockDatabase=firebase.database();
+startSiteEnabledSync();
+startRemoteLockSync();stockRef=stockDatabase.ref('wineStock');stockRef.once('value').then(snapshot=>{if(!snapshot.exists()&&Object.keys(initialLocalStockStatus).length){const seed={};Object.keys(initialLocalStockStatus).forEach(key=>{if(initialLocalStockStatus[key]==='out')seed[stockId(key)]={key,status:'out',updatedAt:firebase.database.ServerValue.TIMESTAMP};});if(Object.keys(seed).length)return stockRef.update(seed);}}).catch(console.error);stockRef.on('value',snapshot=>{stockSyncReady=true;applySharedStock(snapshot.val());},error=>{stockSyncReady=false;console.error('Stock sync unavailable:',error);});}catch(error){console.error('Firebase startup failed:',error);}}
 function stockDotHtml(key){const sold=isSoldOut(key),label=lang==='zh'?(sold?'售罄，按住兩秒更改':'有貨，按住兩秒更改'):(sold?'Sold out. Hold for two seconds to change':'In stock. Hold for two seconds to change');return `<span class="stock-dot ${sold?'sold-out':'in-stock'}" data-stock-key="${esc(key)}" role="button" tabindex="0" aria-label="${esc(label)}" title="${esc(label)}"></span>`;}
 const stockDialog=document.createElement('dialog');stockDialog.className='stock-dialog';stockDialog.innerHTML='<form method="dialog" class="stock-dialog-card"><h3 class="stock-dialog-title"></h3><p class="stock-dialog-copy"></p><div class="stock-dialog-actions"><button value="cancel" class="stock-cancel"></button><button value="confirm" class="stock-confirm"></button></div></form>';document.body.appendChild(stockDialog);
 function confirmStockChange(key){if(!staffUnlocked()){showStaffLogin();return;}const sold=isSoldOut(key),nextSold=!sold;stockDialog.querySelector('.stock-dialog-title').textContent=lang==='zh'?(nextSold?'標記為售罄？':'標記為有貨？'):(nextSold?'Mark as sold out?':'Mark as in stock?');stockDialog.querySelector('.stock-dialog-copy').textContent=lang==='zh'?(nextSold?'確認後，此酒將顯示為售罄，並不能被選取。':'確認後，此酒將重新顯示為有貨。'):(nextSold?'This wine will appear sold out and cannot be selected.':'This wine will appear in stock again.');stockDialog.querySelector('.stock-cancel').textContent=lang==='zh'?'取消':'Cancel';stockDialog.querySelector('.stock-confirm').textContent=lang==='zh'?'確認':'Confirm';stockDialog.returnValue='';stockDialog.showModal();stockDialog.onclose=async()=>{if(stockDialog.returnValue!=='confirm')return;if(nextSold)stockStatus[key]='out';else delete stockStatus[key];saveLocalStockStatus();if(nextSold&&markedWines[0]?.key===key)markedWines=[];render();updateMarkerUI();try{await writeSharedStock(key,nextSold);}catch(error){console.error('Unable to sync stock change:',error);alert(lang==='zh'?'未能同步至其他裝置，請檢查網絡後再試。':'Could not sync to other devices. Please check the connection and try again.');}};}
@@ -284,20 +326,6 @@ main.innerHTML=`<section class="hero"><div class="kicker">${esc(ui().brand)}${gr
 navR();
 render();
 startStockSync();
-
-console.log('HELLO TEST');
-
-if (window.firebase) {
-  firebase
-    .database()
-    .ref('test')
-    .once('value')
-    .then(snapshot => {
-      console.log('Firebase test:', snapshot.val());
-    })
-    .catch(console.error);
-}
-
 
 // Welcome cover: fade away on entry and return after five minutes of inactivity.
 const welcomeCover=document.querySelector('#welcome-cover');

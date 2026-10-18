@@ -503,3 +503,65 @@ body.welcome-active{overflow:hidden}body.welcome-active .app{user-select:none}
 @media (orientation:landscape) and (max-height:500px){.welcome-identity{top:42%;width:min(420px,48vw)}.welcome-logo{max-height:23dvh}.welcome-subtitle{margin-top:10px;font-size:clamp(15px,4vh,21px)}.welcome-credit{bottom:max(4vh,env(safe-area-inset-bottom,0px));font-size:clamp(11px,3vh,14px);line-height:1.4}}
 @media (max-width:600px) and (orientation:portrait){.welcome-identity{width:min(470px,82vw)}}
 @media (prefers-reduced-motion:reduce){.welcome-cover,.welcome-cover.is-hidden{transition-duration:.25s}.welcome-logo,.welcome-cover.returning .welcome-logo{animation:none}}
+/* Firebase Site Kill Switch */
+
+body.site-disabled-active{
+  overflow:hidden;
+}
+
+body.site-disabled-active .app{
+  display:none;
+}
+
+body.site-disabled-active .welcome-cover{
+  display:none !important;
+}
+
+body.site-disabled-active .remote-lock-overlay{
+  display:none !important;
+}
+
+.site-disabled-overlay{
+  position:fixed;
+  inset:0;
+  z-index:11000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:linear-gradient(
+    145deg,
+    #fffdfa,
+    #f4ead9
+  );
+}
+
+.site-disabled-overlay[hidden]{
+  display:none;
+}
+
+.site-disabled-card{
+  width:min(520px,100%);
+  text-align:center;
+}
+
+.site-disabled-brand{
+  color:#93651f;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.site-disabled-title{
+  margin:14px 0;
+  color:#201b16;
+  font-family:Georgia,serif;
+  font-size:34px;
+  font-weight:400;
+}
+
+.site-disabled-message{
+  color:#70685f;
+  line-height:1.7;
+}
