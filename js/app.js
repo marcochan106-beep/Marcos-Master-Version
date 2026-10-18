@@ -281,3 +281,16 @@ if(c.id==='c0'&&!group){
   return;
 }
 main.innerHTML=`<section class="hero"><div class="kicker">${esc(ui().brand)}${group?' · '+esc(pick(c,'title')):''}</div><h2>${esc(group?pick(group,'name'):pick(c,'title'))}</h2></section>`+sections.map(s=>`<section class="section"><h3>${esc(pick(s,'name'))}</h3>${s.items.map(x=>card(x,c,s)).join('')}</section>`).join('')+`<div class="legal">${esc(ui().legalGeneral)}</div>`;bind()}q.oninput=render;navR();render();startStockSync();
+
+// Welcome cover: fade away on entry and return after five minutes of inactivity.
+const welcomeCover=document.querySelector('#welcome-cover');
+const WELCOME_IDLE_MS=5*60*1000;
+let welcomeIdleTimer=null,welcomeVisible=true;
+function showWelcomeCover(){welcomeVisible=true;welcomeCover.classList.remove('is-hidden','returning');void welcomeCover.offsetWidth;welcomeCover.classList.add('returning');welcomeCover.setAttribute('aria-hidden','false');document.body.classList.add('welcome-active');clearTimeout(welcomeIdleTimer)}
+function hideWelcomeCover(){if(!welcomeVisible)return;welcomeVisible=false;welcomeCover.classList.add('is-hidden');welcomeCover.classList.remove('returning');welcomeCover.setAttribute('aria-hidden','true');document.body.classList.remove('welcome-active');resetWelcomeIdleTimer()}
+function resetWelcomeIdleTimer(){if(welcomeVisible)return;clearTimeout(welcomeIdleTimer);welcomeIdleTimer=setTimeout(showWelcomeCover,WELCOME_IDLE_MS)}
+welcomeCover.addEventListener('click',hideWelcomeCover);
+welcomeCover.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();hideWelcomeCover()}});
+['pointerdown','keydown','scroll','touchstart'].forEach(type=>document.addEventListener(type,resetWelcomeIdleTimer,{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)resetWelcomeIdleTimer()});
+showWelcomeCover();
