@@ -1,18 +1,19 @@
 const C=window.WINE_DATA;
-updated='7 October 2026';
+updated='18 October 2026';
 const totalSelections=C.reduce((total,category)=>total+category.sections.reduce((sum,section)=>sum+section.items.length,0),0);let current=C[0].id;const nav=document.querySelector('#nav'),main=document.querySelector('#main'),q=document.querySelector('#q'),st=document.querySelector('#st'),meta=document.querySelector('#meta');const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const n=c=>c.sections.reduce((a,s)=>a+s.items.length,0);
+const brandName=document.querySelector('#brand-name'),wineListTitle=document.querySelector('#wine-list-title');
 let lang=localStorage.getItem('wineListLanguage')==='zh'?'zh':'en';
 let fontSize=localStorage.getItem('wineListFontSize')||'normal';
 if(!['normal','large'].includes(fontSize))fontSize='normal';
 const pick=(obj,key)=>lang==='zh'&&obj&&obj[key+'Zh']?obj[key+'Zh']:(obj?.[key]??'');
-const ui=()=>lang==='zh'?{search:'搜尋酒款',selections:'款精選',updated:'更新於',featured:'重點推介',heroTitle:'每月精選佳釀',heroSub:'精選珍稀佳釀，細味酒莊與年份故事',legal:'所有價格均以港幣計算，另收加一服務費。售價超過港幣10,000元的酒款均按現況出售，開瓶後恕不退換。',noFeature:'暫未有精選酒款。'}:{search:'Search wines',selections:'selections',updated:'Updated',featured:'Featured selection',heroTitle:'Wine of the Month',heroSub:'A rare bottle selected for a closer look',legal:'All prices are in HK$ and subject to 10% service charge. Wines priced over HK$10,000 are sold "AS-IS"; no return or refund after the wine is opened.',noFeature:'No featured wine found.'};
+const ui=()=>lang==='zh'?{brand:'天龍軒',search:'搜尋酒款',selections:'款精選',updated:'更新於',featured:'重點推介',heroTitle:'每月精選佳釀',heroSub:'精選珍稀佳釀，細味酒莊與年份故事',legal:'所有價格均以港幣計算，另收加一服務費。售價超過港幣10,000元的酒款均按現況出售，開瓶後恕不退換。',legalGeneral:'所有價格均以港幣計算，另收加一服務費。所有酒款均經品質檢查。售價超過港幣10,000元的酒款均按現況出售，開瓶後恕不退換。',noFeature:'暫未有精選酒款。'}:{brand:'Tin Lung Heen',search:'Search wines',selections:'selections',updated:'Updated',featured:'Featured selection',heroTitle:'Wine of the Month',heroSub:'A rare bottle selected for a closer look',legal:'All prices are in HK$ and subject to 10% service charge. Wines priced over HK$10,000 are sold "AS-IS"; no return or refund after the wine is opened.',legalGeneral:'All prices are in HK$ and subject to 10% service charge. All wines are inspected for quality. Wines priced over HK$10,000 are sold "AS-IS"; no return or refund after the wine is opened.',noFeature:'No featured wine found.'};
 const langToggle=document.createElement('button');langToggle.type='button';langToggle.className='lang-toggle';meta.insertAdjacentElement('afterend',langToggle);
 const fontControls=document.createElement('div');fontControls.className='font-controls';fontControls.setAttribute('role','group');fontControls.setAttribute('aria-label','Text size');fontControls.innerHTML='<button type="button" class="font-btn" data-size="normal" aria-label="Normal text">A</button><button type="button" class="font-btn" data-size="large" aria-label="Large text">A+</button>';langToggle.insertAdjacentElement('afterend',fontControls);
 function updateLanguageUI(){
   langToggle.innerHTML=
     lang==='zh'
       ? '<span class="active">繁</span><span>/</span><span>EN</span>'
-      : '<span>繁</span><span>/</span><span class="active">EN</span>';langToggle.setAttribute('aria-label',lang==='zh'?'切換至英文':'Switch to Traditional Chinese');document.documentElement.lang=lang==='zh'?'zh-Hant-HK':'en-GB';q.placeholder=ui().search;}
+      : '<span>繁</span><span>/</span><span class="active">EN</span>';langToggle.setAttribute('aria-label',lang==='zh'?'切換至英文':'Switch to Traditional Chinese');document.documentElement.lang=lang==='zh'?'zh-Hant-HK':'en-GB';brandName.textContent=lang==='zh'?'天龍軒':'Tin Lung Heen';wineListTitle.textContent=lang==='zh'?'葡萄酒及飲料全單':'Master Wine List';q.placeholder=ui().search;}
 langToggle.onclick=()=>{lang=lang==='zh'?'en':'zh';localStorage.setItem('wineListLanguage',lang);updateLanguageUI();updateStaffUI();navR();render();};updateLanguageUI();
 function updateFontUI(){document.documentElement.dataset.fontSize=fontSize;fontControls.querySelectorAll('.font-btn').forEach(btn=>{const active=btn.dataset.size===fontSize;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',String(active));});}
 fontControls.querySelectorAll('.font-btn').forEach(btn=>btn.onclick=()=>{fontSize=btn.dataset.size;localStorage.setItem('wineListFontSize',fontSize);updateFontUI();});updateFontUI();
@@ -86,73 +87,104 @@ c2:[
 ],
 
 c6:[
-  {name:'Vintage Champagne',sections:['Vintage Champagne']},
-  {name:'White Burgundy & Bordeaux',sections:['White']},
-  {name:'Dessert Wines',sections:['Dessert']},
-  {name:'Red Bordeaux',sections:['Red']},
-  {name:'Domaine de la Romanee-Conti',sections:['Domaine de la Romanee-Conti']}
+  {name:'Vintage Champagne',nameZh:'年份香檳',sections:['Vintage Champagne']},
+  {name:'White Burgundy & Bordeaux',nameZh:'勃艮第及波爾多白酒',sections:['White']},
+  {name:'Dessert Wines',nameZh:'甜酒',sections:['Dessert']},
+  {name:'Red Bordeaux',nameZh:'波爾多紅酒',sections:['Red']},
+  {name:'Domaine de la Romanee-Conti',nameZh:'羅曼尼康帝酒莊',sections:['Domaine de la Romanée-Conti']}
 ],
 
 c7:[
-  {name:'Champagne',sections:['Champagne']},
-  {name:'White Burgundy',sections:['Bourgogne Blanc']},
-  {name:'Red Burgundy',sections:['Bourgogne Rouge']},
-  {name:'Red Bordeaux',sections:['Red Bordeaux','Bordeaux Rouge']}
+  {name:'Champagne',nameZh:'香檳',sections:['Champagne']},
+  {name:'White Burgundy',nameZh:'勃艮第白葡萄酒',sections:['Bourgogne Blanc']},
+  {name:'Red Burgundy',nameZh:'勃艮第紅葡萄酒',sections:['Bourgogne Rouge']},
+  {name:'Red Bordeaux',nameZh:'波爾多紅葡萄酒',sections:['Red Bordeaux','Bordeaux Rouge']}
 ],
 
  c14:[
-  {name:'Alsace',sections:['Alsace','Famille Hugel','Trimbach']},
-  {name:'Bordeaux',sections:['Bordeaux']},
-  {name:'Burgundy',sections:['Chablis','Cote de Nuits','Cote de Beaune','Cote de Beaune, Grand Cru','Meursault','Puligny Montrachet','Chassagne Montrachet','Maconnais']},
-  {name:'Loire',sections:['Loire Valley']},
-  {name:'Rhône',sections:['Rhone Valley']}
+  {name:'Alsace',nameZh:'阿爾薩斯',sections:['Alsace','Famille Hugel','Trimbach']},
+  {name:'Bordeaux',nameZh:'波爾多',sections:['Bordeaux']},
+  {name:'Burgundy',nameZh:'勃艮第',sections:['Chablis','Cote de Nuits','Cote de Beaune','Cote de Beaune, Grand Cru','Meursault','Puligny Montrachet','Chassagne Montrachet','Maconnais']},
+  {name:'Loire',nameZh:'羅亞爾河谷',sections:['Loire Valley']},
+  {name:'Rhône',nameZh:'隆河谷',sections:['Rhone Valley']}
  ],
  c20:[
-  {name:'Bordeaux',sections:['Graves','Haut Medoc','Margaux','Chateau Margaux','Chateau Palmer','Pauillac','Chateau Lafite Rothschild','Chateau Latour','Chateau Mouton Rothschild','St. Estephe','St. Julien','Pomerol','Petrus','St. Emilion','Chateau Angelus']},
-  {name:'Burgundy',sections:['Marsannay','Gevrey Chambertin','Morey St Denis','Chambolle Musigny','Vougeot','Vosne Romanee','Nuits St Georges','Domaine de la Romanee-Conti','Aloxe-Corton','Pommard','Volnay','Santenay']},
-  {name:'Beaujolais',sections:['Beaujolais']},
-  {name:'Loire',sections:['Loire Valley']},
-  {name:'Rhône',sections:['Northern Rhone','M. Chapoutier','E. Guigal','Southern Rhone','Chateau de Beaucastel']}
+  {name:'Bordeaux',nameZh:'波爾多',sections:['Graves','Haut Medoc','Margaux','Chateau Margaux','Chateau Palmer','Pauillac','Chateau Lafite Rothschild','Chateau Latour','Chateau Mouton Rothschild','St. Estephe','St. Julien','Pomerol','Petrus','St. Emilion','Chateau Angelus']},
+  {name:'Burgundy',nameZh:'勃艮第',sections:['Marsannay','Gevrey Chambertin','Morey St Denis','Chambolle Musigny','Vougeot','Vosne Romanee','Nuits St Georges','Domaine de la Romanee-Conti','Aloxe-Corton','Pommard','Volnay','Santenay']},
+  {name:'Beaujolais',nameZh:'薄酒萊',sections:['Beaujolais']},
+  {name:'Loire',nameZh:'羅亞爾河谷',sections:['Loire Valley']},
+  {name:'Rhône',nameZh:'隆河谷',sections:['Northern Rhone','M. Chapoutier','E. Guigal','Southern Rhone','Chateau de Beaucastel']}
  ],
  c19:[
-  {name:'Sicily',sections:['Sicilia','Etna Rosso']},
-  {name:'Piedmont',sections:['Piemonte','Barbaresco','Barolo']},
-  {name:'Lombardy',sections:['Lombardia']},
-  {name:'Veneto',sections:['Veneto','Amarone della Valpolicella']},
-  {name:'Friuli-Venezia Giulia',sections:['Friuli Venezia Giulia']},
-  {name:'Tuscany',sections:['Super Toscana','Antinori','Tenuta San Guido','Brunello di Montalcino','Biondi Santi','Gaja','Mastrojanni','Soldera','Vino Nobile di Montepulciano','Chianti']},
-  {name:'Central & Southern Italy',sections:['Umbria','Marche','Lazio','Abruzzo','Campania','Basilicata','Sardegna']},
-  {name:'Northern Italy',sections:['Trentino Alto Adige',"Valle D' Aosta"]}
+  {name:'Sicily',nameZh:'西西里',sections:['Sicilia','Etna Rosso']},
+  {name:'Piedmont',nameZh:'皮埃蒙特',sections:['Piemonte','Barbaresco','Barolo']},
+  {name:'Lombardy',nameZh:'倫巴第',sections:['Lombardia']},
+  {name:'Veneto',nameZh:'威尼托',sections:['Veneto','Amarone della Valpolicella']},
+  {name:'Friuli-Venezia Giulia',nameZh:'弗留利－威尼斯朱利亞',sections:['Friuli Venezia Giulia']},
+  {name:'Tuscany',nameZh:'托斯卡納',sections:['Super Toscana','Antinori','Tenuta San Guido','Brunello di Montalcino','Biondi Santi','Gaja','Mastrojanni','Soldera','Vino Nobile di Montepulciano','Chianti']},
+  {name:'Central & Southern Italy',nameZh:'意大利中南部',sections:['Umbria','Marche','Lazio','Abruzzo','Campania','Basilicata','Sardegna']},
+  {name:'Northern Italy',nameZh:'意大利北部',sections:['Trentino Alto Adige',"Valle D' Aosta"]}
  ],
  c21:[
-  {name:'Spain',sections:['Rioja','Priorat','Ribera del Duero','Costers del Segre','Catalunya','Ribeira Sacra','Navarra','Valencia']},
-  {name:'Austria',sections:['Austria']},
-  {name:'Bulgaria',sections:['Bulgaria']}
+  {name:'Spain',nameZh:'西班牙',sections:['Rioja','Priorat','Ribera del Duero','Costers del Segre','Catalunya','Ribeira Sacra','Navarra','Valencia']},
+  {name:'Austria',nameZh:'奧地利',sections:['Austria']},
+  {name:'Bulgaria',nameZh:'保加利亞',sections:['Bulgaria']}
  ],
  c17:[
-  {name:'Champagne',sections:['Champagne']},
-  {name:'White Wines',sections:['White Wines']},
-  {name:'Red Wines',sections:['Red Wines']}
+  {name:'Champagne',nameZh:'香檳',sections:['Champagne']},
+  {name:'White Wines',nameZh:'白葡萄酒',sections:['White Wines']},
+  {name:'Red Wines',nameZh:'紅葡萄酒',sections:['Red Wines']}
  ],
  c18:[
-  {name:'Champagne & Sparkling',sections:['Champagne & Sparkling']},
-  {name:'White Wines',sections:['White Wines']},
-  {name:'France',sections:['France']},
-  {name:'Italy',sections:['Italy']},
-  {name:'Spain',sections:['Spain']},
-  {name:'USA',sections:['USA']}
+  {name:'Champagne & Sparkling',nameZh:'香檳及氣泡酒',sections:['Champagne & Sparkling']},
+  {name:'White Wines',nameZh:'白葡萄酒',sections:['White Wines']},
+  {name:'France',nameZh:'法國',sections:['France']},
+  {name:'Italy',nameZh:'意大利',sections:['Italy']},
+  {name:'Spain',nameZh:'西班牙',sections:['Spain']},
+  {name:'USA',nameZh:'美國',sections:['USA']}
  ],
  c13:[
-  {name:'Germany',sections:['Mosel','Rheingau','Rheinhessen']},
-  {name:'Spain',sections:['Rias Baixas','Rioja','Rueda','Central Pyrenees']},
-  {name:'Austria',sections:['Kamptal']}
+  {name:'Germany',nameZh:'德國',sections:['Mosel','Rheingau','Rheinhessen']},
+  {name:'Spain',nameZh:'西班牙',sections:['Rias Baixas','Rioja','Rueda','Central Pyrenees']},
+  {name:'Austria',nameZh:'奧地利',sections:['Kamptal']}
+ ],
+ c22:[
+  {name:'Cabernet Sauvignon',nameZh:'赤霞珠',sections:['Cabernet Sauvignon']},
+  {name:'Zinfandel',nameZh:'仙粉黛',sections:['Zinfandel']},
+  {name:'Malbec',nameZh:'馬爾貝克',sections:['Malbec']},
+  {name:'Merlot',nameZh:'梅洛',sections:['Merlot']},
+  {name:'Pinot Noir',nameZh:'黑皮諾',sections:['Pinot Noir']},
+  {name:'Shiraz',nameZh:'希哈',sections:['Shiraz']},
+  {name:"Penfold's Selection",nameZh:'奔富精選',sections:["Penfold's Selection"]},
+  {name:"Two Hands's Selection",nameZh:'雙手酒莊精選',sections:["Two Hands's Selection"]},
+  {name:'Indigenous & Curiosities',nameZh:'原生品種與特色酒款',sections:['Indigenous & Curiosities']},
+  {name:"Xige Estate's Selection",nameZh:'西鴿酒莊精選',sections:["Xige Estate's Selection"]}
+ ],
+ c23:[
+  {name:'Port',nameZh:'砵酒',sections:['Port']},
+  {name:'Madeira',nameZh:'馬德拉酒',sections:['Madeira']},
+  {name:'Sherry',nameZh:'雪莉酒',sections:['Sherry']},
+  {name:'Canada',nameZh:'加拿大',sections:['Canada']},
+  {name:'France',nameZh:'法國',sections:['France']},
+  {name:'China',nameZh:'中國',sections:['China']},
+  {name:'Germany',nameZh:'德國',sections:['Germany']},
+  {name:'Italy',nameZh:'意大利',sections:['Italy']},
+  {name:'New Zealand',nameZh:'紐西蘭',sections:['New Zealand']}
+ ],
+ c24:[
+  {name:'Huangjiu',nameZh:'黃酒',sections:['Huangjiu']},
+  {name:'Baijiu',nameZh:'白酒',sections:['Baijiu']}
+ ],
+ c25:[
+  {name:'Hyogo',nameZh:'兵庫',sections:['Hyogo']},
+  {name:'Niigata',nameZh:'新潟',sections:['Niigata']}
  ]
 };
 function navChildren(c){
  if(PRE_SOMMELIER_IDS.has(c.id))return [];
  if(GROUPS[c.id])return GROUPS[c.id];
  // After Sommelier Selection, a page unfolds only when it genuinely has multiple sections.
- if(c.sections.length>1)return c.sections.map(s=>({name:s.name,sections:[s.name]}));
+ if(c.sections.length>1)return c.sections.map(s=>({name:s.name,nameZh:s.nameZh,sections:[s.name]}));
  return [];
 }
 let openCat='',activeGroup=null;
@@ -196,25 +228,17 @@ function navR(){
 });
 }
 function card(x,category,section){
-  const key=wineKey(x),sold=isSoldOut(key);
-
-  const displayPrice=
-    lang==='zh'
-      ? String(x.price)
-          .replace(/\bGlass\b/gi,'杯裝')
-          .replace(/\bBottle\b/gi,'瓶裝')
-      : String(x.price);
-
+  const key=wineKey(x),sold=isSoldOut(key),name=pick(x,'name'),price=pick(x,'price'),note=pick(x,'note');
   return `<article class="wine ${sold?'sold-out':''}" data-wine-key="${esc(key)}">
     <button class="row" aria-expanded="false">
       <span class="v"><span>${x.v}</span>${stockDotHtml(key)}</span>
-      <span class="name">${esc(pick(x,'name'))}</span>
+      <span class="name">${esc(name)}</span>
       <span class="price">
-${esc(displayPrice).replace(/ · /g,'<br>')}
+${esc(price).replace(/ · /g,'<br>')}
 </span>
       <span class="plus">+</span>
     </button>
-    <div class="inside"><div>${esc(pick(x,'note')).replace(/\n/g,'<br>')}</div><button type="button" class="mark-wine" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(pick(x,'name'))}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button></div>
+    <div class="inside"><div>${esc(note).replace(/\n/g,'<br>')}</div><button type="button" class="mark-wine" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(name)}" data-price="${esc(price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button></div>
   </article>`
 }
 function featureNote(note){
@@ -230,11 +254,11 @@ function featureCard(x,category,section){
       <div class="wotm-summary">
         <div class="wotm-vintage"><span>${esc(x.v)}</span>${stockDotHtml(key)}</div>
         <h2>${esc(pick(x,'name'))}</h2>
-        <div class="wotm-prices">${String(lang==='zh'?String(pick(x,'price')??'').replace(/\bGlass\b/gi,'杯裝').replace(/\bBottle\b/gi,'瓶裝'):(pick(x,'price')??'')).split(/\s*·\s*/).filter(Boolean).map(price=>`<div class="wotm-price-line">${esc(price)}</div>`).join('')}</div>
+        <div class="wotm-prices">${String(pick(x,'price')??'').split(/\s*·\s*/).filter(Boolean).map(price=>`<div class="wotm-price-line">${esc(price)}</div>`).join('')}</div>
       </div>
     </div>
     <div class="wotm-copy">${featureNote(pick(x,'note'))}</div>
-    <button type="button" class="mark-wine feature-mark" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(pick(x,'name'))}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button>
+    <button type="button" class="mark-wine feature-mark" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(x.name)}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button>
   </section>`;
 }
 function bind(){main.querySelectorAll('.row').forEach(b=>b.onclick=()=>{const a=b.closest('.wine'),o=a.classList.toggle('open');b.setAttribute('aria-expanded',o)});bindStockDots();bindMarkButtons();}function render(){const query=q.value.trim().toLowerCase();if(query){let groups=[];C.forEach(c=>c.sections.forEach(s=>{let items=s.items.filter(x=>(c.title+' '+s.name+' '+x.v+' '+x.name+' '+x.price+' '+x.note).toLowerCase().includes(query));if(items.length)groups.push({title:c.title+' · '+s.name,items,category:c,section:s})}));let count=groups.reduce((a,g)=>a+g.items.length,0);st.textContent='Search results';meta.textContent=totalSelections+' selections · Updated '+updated;main.innerHTML=`<section class="hero"><div class="kicker">Search</div><h2>${esc(q.value)}</h2><p>${count} matching selections</p></section>`+(groups.length?groups.map(g=>`<section class="section"><h3>${esc(g.title)}</h3>${g.items.map(x=>card(x,g.category,g.section)).join('')}</section>`).join(''):'<div class="empty">No matching selection found.</div>');bind();return}let c=C.find(x=>x.id===current)||C[0];st.textContent='';meta.textContent=totalSelections+' '+ui().selections+' · '+ui().updated+' '+updated;const sectionKey=value=>String(value??'')
@@ -251,9 +275,9 @@ let sections=group
   :c.sections;
 if(c.id==='c0'&&!group){
   const item=c.sections[0]?.items?.[0];
-  main.innerHTML=`<section class="hero hero-wotm"><div class="kicker">Tin Lung Heen</div><h2>${esc(ui().heroTitle)}</h2><p>${esc(ui().heroSub)}</p></section>`+(item?featureCard(item,c,c.sections[0]):`<div class="empty">${esc(ui().noFeature)}</div>`)+`<div class="legal">${esc(ui().legal)}</div>`;
+  main.innerHTML=`<section class="hero hero-wotm"><div class="kicker">${esc(ui().brand)}</div><h2>${esc(ui().heroTitle)}</h2><p>${esc(ui().heroSub)}</p></section>`+(item?featureCard(item,c,c.sections[0]):`<div class="empty">${esc(ui().noFeature)}</div>`)+`<div class="legal">${esc(ui().legal)}</div>`;
   bindStockDots();
   bindMarkButtons();
   return;
 }
-main.innerHTML=`<section class="hero"><div class="kicker">Tin Lung Heen${group?' · '+esc(pick(c,'title')):''}</div><h2>${esc(group?pick(group,'name'):pick(c,'title'))}</h2></section>`+sections.map(s=>`<section class="section"><h3>${esc(pick(s,'name'))}</h3>${s.items.map(x=>card(x,c,s)).join('')}</section>`).join('')+`<div class="legal">All prices are in HK$ and subject to 10% service charge. All wines are inspected for quality. Wines priced over HK$10,000 are sold "AS-IS"; no return or refund after the wine is opened.</div>`;bind()}q.oninput=render;navR();render();startStockSync();
+main.innerHTML=`<section class="hero"><div class="kicker">${esc(ui().brand)}${group?' · '+esc(pick(c,'title')):''}</div><h2>${esc(group?pick(group,'name'):pick(c,'title'))}</h2></section>`+sections.map(s=>`<section class="section"><h3>${esc(pick(s,'name'))}</h3>${s.items.map(x=>card(x,c,s)).join('')}</section>`).join('')+`<div class="legal">${esc(ui().legalGeneral)}</div>`;bind()}q.oninput=render;navR();render();startStockSync();

@@ -470,3 +470,21 @@ html[data-font-size="large"] .navsub{
     padding-right:14px !important;
   }
 }
+
+html[lang="zh-Hant-HK"] .brand{
+  font-size:calc(24px * var(--font-scale));
+  letter-spacing:.12em;
+}
+
+html[lang="zh-Hant-HK"] .side h1{
+  font-size:calc(18px * var(--font-scale));
+  letter-spacing:.08em;
+}
+
+html[lang="en-GB"] .brand{
+  font-size:calc(24px * var(--font-scale));
+}
+
+html[lang="en-GB"] .side h1{
+  font-size:calc(18px * var(--font-scale));
+}
