@@ -1,5 +1,5 @@
 const C=window.WINE_DATA;
-updated='13 October 2026';
+updated='7 October 2026';
 const totalSelections=C.reduce((total,category)=>total+category.sections.reduce((sum,section)=>sum+section.items.length,0),0);let current=C[0].id;const nav=document.querySelector('#nav'),main=document.querySelector('#main'),q=document.querySelector('#q'),st=document.querySelector('#st'),meta=document.querySelector('#meta');const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const n=c=>c.sections.reduce((a,s)=>a+s.items.length,0);
 let lang=localStorage.getItem('wineListLanguage')==='zh'?'zh':'en';
 let fontSize=localStorage.getItem('wineListFontSize')||'normal';
@@ -72,7 +72,7 @@ function addMarkedWine(data){if(isSoldOut(data.key)||markedWines[0]?.key===data.
 function jumpToMarked(index){const selected=markedWines[index];if(!selected)return;current=selected.categoryId;openCat='';activeGroup=null;q.value='';pendingJumpKey=selected.key;navR();render();requestAnimationFrame(()=>requestAnimationFrame(()=>{const target=[...document.querySelectorAll('.wine,.wotm-feature')].find(el=>el.dataset.wineKey===pendingJumpKey);if(target){target.classList.add('jump-pulse');target.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>target.classList.remove('jump-pulse'),1600);}pendingJumpKey='';}));}
 function bindMarkButtons(){main.querySelectorAll('.mark-wine').forEach(btn=>{let timer=null,done=false;const stop=()=>{if(timer)clearTimeout(timer);timer=null;btn.classList.remove('holding');};const start=e=>{e.preventDefault();done=false;stop();btn.classList.add('holding');timer=setTimeout(()=>{const key=btn.dataset.key;addMarkedWine({key,v:btn.dataset.v,name:btn.dataset.name,price:btn.dataset.price,type:btn.dataset.type,categoryId:btn.dataset.category,byGlass:isByTheGlass(btn.dataset.price),format:'bottle',glasses:1,seats:[]});done=true;btn.classList.remove('holding');},800);};btn.addEventListener('pointerdown',start);btn.addEventListener('pointerup',stop);btn.addEventListener('pointercancel',stop);btn.addEventListener('pointerleave',stop);btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(!done)btn.classList.remove('holding');});});updateMarkerUI();}
 // Navigation intentionally begins hierarchical browsing only after Sommelier Selection.
-const PRE_SOMMELIER_IDS=new Set(['c0','c1','c3','c4','c5']);
+const PRE_SOMMELIER_IDS=new Set(['c0','c3','c4','c5']);
 const GROUPS={
 
 c2:[
@@ -160,7 +160,6 @@ function navR(){
 
  const navOrder = [
    'c0', // Wine of the Month
-   'c1', // Wines of Asia
    'c2', // Wine by the Glass
    'c6', // Premium Fine Wine Collection
    'c7', // Sommelier Selection
@@ -177,7 +176,6 @@ function navR(){
  nav.innerHTML=orderedC.map(c=>{const kids=navChildren(c),has=kids.length>0,open=has&&c.id===openCat;
   return `<div class="navgroup"><button data-cat="${c.id}" class="navcat ${c.id===current&&!activeGroup?'active':''}" ${has?`aria-expanded="${open}"`:''}><span>${
   ['Wine of the Month',
-   'Wines of Asia',
    'Wine by the Glass',
    'Premium Collection',
    'Sommelier Selection'
