@@ -285,6 +285,8 @@ navR();
 render();
 startStockSync();
 
+console.log('HELLO TEST');
+
 if (window.firebase) {
   firebase
     .database()
