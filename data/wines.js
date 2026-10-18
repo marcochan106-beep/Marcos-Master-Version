@@ -28,193 +28,267 @@ window.WINE_DATA = [
   {
     "id": "c2",
     "title": "Wine by the Glass",
+    "titleZh": "杯裝佳釀",
     "sections": [
       {
         "name": "Champagne",
+        "nameZh": "香檳",
         "items": [
           {
             "v": "NV",
             "name": "Barons de Rothschild, \"Ritz\" Brut Reserve",
             "price": "Glass $268 · Bottle $1,538",
             "section": "Champagne",
-            "note": "Citrus, orchard fruit and brioche. Created exclusively for Ritz-Carlton properties, this cuvée balances freshness with extended ageing on lees."
+            "note": "Citrus, orchard fruit and brioche. Created exclusively for Ritz-Carlton properties, this cuvée balances freshness with extended ageing on lees.",
+            "nameZh": "羅斯柴爾德男爵香檳，「麗思」特釀珍藏香檳，香檳區，法國",
+            "priceZh": "杯裝 $268 · 原瓶 $1,538",
+            "noteZh": "柑橘、果園水果及布里歐麵包。此特釀專為麗思卡爾頓酒店而設，經長時間酒泥陳年，兼具清新感與細緻層次。"
           },
           {
             "v": "NV",
             "name": "Ruinart, Blanc de Blancs Brut",
             "price": "Glass $368 · Bottle $1,903",
             "section": "Champagne",
-            "note": "Lemon, white blossom and peach. A Chardonnay-led house style built around freshness and purity, drawing fruit from a broad selection of Champagne crus."
+            "note": "Lemon, white blossom and peach. A Chardonnay-led house style built around freshness and purity, drawing fruit from a broad selection of Champagne crus.",
+            "nameZh": "瑞納香檳，白中白香檳，香檳區，法國",
+            "priceZh": "杯裝 $368 · 原瓶 $1,903",
+            "noteZh": "檸檬、白花及蜜桃。以莎當妮為主導的酒莊風格，精選不同香檳村的葡萄，展現清新純淨的個性。"
           },
           {
             "v": "NV",
             "name": "Billecart-Salmon, Le Rosé Extra Brut",
             "price": "Glass $428 · Bottle $2,080",
             "section": "Champagne",
-            "note": "Wild strawberry, toast and citrus zest. Extended lees ageing and an Extra Brut dosage give this rosé Champagne precise fruit, fine mousse and a dry, focused profile."
+            "note": "Wild strawberry, toast and citrus zest. Extended lees ageing and an Extra Brut dosage give this rosé Champagne precise fruit, fine mousse and a dry, focused profile.",
+            "nameZh": "比爾卡沙蒙香檳，「粉紅」特級天然香檳，香檳區，法國",
+            "priceZh": "杯裝 $428 · 原瓶 $2,080",
+            "noteZh": "野草莓、烘多士及柑橘皮。長時間酒泥陳年配合特級乾型的糖分調整，令此粉紅香檳果味精準、氣泡細緻，風格乾爽而集中。"
           },
           {
             "v": "2017",
             "name": "Dom Pérignon Brut",
             "price": "Glass $628 · Bottle $3,290",
             "section": "Champagne",
-            "note": "Lemon peel, white peach and flint. The 2017 vintage combines restrained creaminess with chalky precision, finishing long, saline and finely reductive."
+            "note": "Lemon peel, white peach and flint. The 2017 vintage combines restrained creaminess with chalky precision, finishing long, saline and finely reductive.",
+            "nameZh": "唐培里儂香檳，年份香檳，香檳區，法國",
+            "priceZh": "杯裝 $628 · 原瓶 $3,290",
+            "noteZh": "檸檬皮、白桃及燧石。2017年份以含蓄的奶油質感配合粉筆般的精準礦物感，收結悠長、帶鹹鮮感及細膩還原風格。"
           }
         ]
       },
       {
-        "name": "Sparkling",
+        "name": "Grower Sparkling",
+        "nameZh": "小農氣泡葡萄酒",
         "items": [
           {
             "v": "2023",
             "name": "Silver Heights, \"Bloom Sparkling Wine\" Brut, Ningxia, China",
             "price": "Glass $228 · Bottle $1,280",
             "section": "Sparkling",
-            "note": "Pear, red cherry and toasted rice. Chardonnay and Pinot Noir are blended with Ningxia rice wine during production, giving this pét-nat a distinctly Chinese identity and a dry, tangy profile."
+            "note": "Pear, red cherry and toasted rice. Chardonnay and Pinot Noir are blended with Ningxia rice wine during production, giving this pét-nat a distinctly Chinese identity and a dry, tangy profile.",
+            "nameZh": "銀色高地酒莊，「開屏」自然氣泡葡萄酒，寧夏，中國",
+            "priceZh": "杯裝 $228 · 原瓶 $1,280",
+            "noteZh": "梨子、紅櫻桃及烤米。釀造時將莎當妮及黑皮諾與寧夏米酒調和，賦予此自然氣泡酒鮮明的中國特色，以及乾爽、明快的酸度。"
           },
           {
             "v": "2018",
             "name": "Wiston Estate, Blanc de Noirs Brut, West Sussex, England",
             "price": "Glass $348 · Bottle $1,800",
             "section": "Sparkling",
-            "note": "Baked pear, toasted almond and croissant. Barrel-fermented Pinot Noir gives vinous breadth, sharpened by vivid English acidity."
+            "note": "Baked pear, toasted almond and croissant. Barrel-fermented Pinot Noir gives vinous breadth, sharpened by vivid English acidity.",
+            "nameZh": "威斯頓酒莊，黑中白氣泡葡萄酒，西薩塞克斯，英格蘭",
+            "priceZh": "杯裝 $348 · 原瓶 $1,800",
+            "noteZh": "焗梨、烤杏仁及牛角包。經橡木桶發酵的黑皮諾帶來葡萄酒般的飽滿感，再以英格蘭鮮明酸度提升輪廓。"
           }
         ]
       },
       {
         "name": "White",
+        "nameZh": "白葡萄酒",
         "items": [
           {
             "v": "2023",
             "name": "Gewurztraminer, \"Rosenberg\", Domaine Barmes Buecher, Alsace, France",
             "price": "Glass $180 · Bottle $880",
             "section": "White",
-            "note": "Lychee, yellow rose and ginger. From a small biodynamically farmed Rosenberg parcel planted in 1995, this is an off-dry Gewurztraminer with freshness balancing its aromatic richness."
+            "note": "Lychee, yellow rose and ginger. From a small biodynamically farmed Rosenberg parcel planted in 1995, this is an off-dry Gewurztraminer with freshness balancing its aromatic richness.",
+            "nameZh": "巴姆斯布歇酒莊，「羅森堡」瓊瑤漿白葡萄酒，阿爾薩斯，法國",
+            "priceZh": "杯裝 $180 · 原瓶 $880",
+            "noteZh": "荔枝、黃玫瑰及薑。來自1995年種植、以生物動力法耕作的Rosenberg小地塊；此半乾型瓊瑤漿以清新酸度平衡馥郁香氣。"
           },
           {
             "v": "2024",
             "name": "Mystic Island, Yihu Cabernet Franc Blanc, Shandong, China",
             "price": "Glass $180 · Bottle $880",
             "section": "White",
-            "note": "Grapefruit, orange peel and pineapple. Gently pressed Cabernet Franc gives a colourless, unoaked white with a vibrant citrus core and a long, lively finish."
+            "note": "Grapefruit, orange peel and pineapple. Gently pressed Cabernet Franc gives a colourless, unoaked white with a vibrant citrus core and a long, lively finish.",
+            "nameZh": "仙島酒莊，逸湖品麗珠白葡萄酒，山東，中國",
+            "priceZh": "杯裝 $180 · 原瓶 $880",
+            "noteZh": "西柚、橙皮及菠蘿。輕柔壓榨的品麗珠釀成無色、未經橡木桶的白酒，柑橘核心鮮明，收結悠長活潑。"
           },
           {
             "v": "2021",
             "name": "Sauvignon Blanc, \"Taylors Pass\", Villa Maria, Marlborough, New Zealand",
             "price": "Glass $268 · Bottle $1,300",
             "section": "White",
-            "note": "Gooseberry, passion fruit and grass. Fruit from the Taylors Pass vineyard produces an unusually concentrated Sauvignon Blanc with pronounced herbal character and subtle mineral texture."
+            "note": "Gooseberry, passion fruit and grass. Fruit from the Taylors Pass vineyard produces an unusually concentrated Sauvignon Blanc with pronounced herbal character and subtle mineral texture.",
+            "nameZh": "維拉瑪利亞酒莊，「泰勒斯帕斯」長相思白葡萄酒，馬爾堡，紐西蘭",
+            "priceZh": "杯裝 $268 · 原瓶 $1,300",
+            "noteZh": "醋栗、熱情果及青草。Taylors Pass葡萄園的果實釀成一款濃郁非凡的長相思，帶明顯草本氣息及細緻礦物質感。"
           },
           {
             "v": "2024",
             "name": "Soave Classico, Gini, Veneto, Italy",
             "price": "Glass $200 · Bottle $980",
             "section": "White",
-            "note": "Wet stone, lemon and almond. Gini's old-vine Garganega from Soave Classico combines mineral precision with the estate's distinctive vineyard character."
+            "note": "Wet stone, lemon and almond. Gini's old-vine Garganega from Soave Classico combines mineral precision with the estate's distinctive vineyard character.",
+            "nameZh": "吉尼酒莊，經典蘇瓦韋白葡萄酒，威尼托，意大利",
+            "priceZh": "杯裝 $200 · 原瓶 $980",
+            "noteZh": "濕石、檸檬及杏仁。Gini酒莊的老藤Garganega來自Soave Classico產區，揉合精準礦物感與酒莊獨具的園地風格。"
           },
           {
             "v": "2023",
             "name": "Riesling, Kiedricher Grafenberg GG, Weingut Robert Weil, Rheingau, Germany",
             "price": "Glass $350 · Bottle $1,680",
             "section": "White",
-            "note": "Green apple, elderflower and white peach. Powerful yet tensile, with crystalline acidity defining its mineral intensity."
+            "note": "Green apple, elderflower and white peach. Powerful yet tensile, with crystalline acidity defining its mineral intensity.",
+            "nameZh": "羅拔威爾酒莊，「基德里希格拉芬堡」特級園雷司令白葡萄酒，萊茵高，德國",
+            "priceZh": "杯裝 $350 · 原瓶 $1,680",
+            "noteZh": "青蘋果、接骨木花及白桃。酒體有力而緊緻，晶瑩酸度勾勒出鮮明的礦物張力。"
           },
           {
             "v": "2022",
             "name": "Chardonnay, Domaine Paul Pernot, Puligny-Montrachet, Burgundy, France",
             "price": "Glass $468 · Bottle $2,280",
             "section": "White",
-            "note": "Flint, white flowers and Granny Smith apple. Domaine Paul Pernot is known for combining generosity of fruit with the elegance expected of Puligny-Montrachet."
+            "note": "Flint, white flowers and Granny Smith apple. Domaine Paul Pernot is known for combining generosity of fruit with the elegance expected of Puligny-Montrachet.",
+            "nameZh": "保羅貝諾酒莊，莎當妮白葡萄酒，普利尼蒙哈榭，勃艮第，法國",
+            "priceZh": "杯裝 $468 · 原瓶 $2,280",
+            "noteZh": "燧石、白花及青蘋果。Domaine Paul Pernot以豐盈果味結合普利尼蒙哈榭應有的優雅而聞名。"
           }
         ]
       },
       {
         "name": "Rose",
+        "nameZh": "粉紅葡萄酒",
         "items": [
           {
             "v": "2023",
             "name": "Cabernet Sauvignon, Grace Wine Rose, Yamanashi, Japan",
             "price": "Glass $198 · Bottle $980",
             "section": "Rose",
-            "note": "Blood orange, redcurrant and pink pepper. Red varieties grown at the Misawa Vineyard are fermented in separate parcels, producing a dry rosé that combines juicy fruit with cool-climate acidity."
+            "note": "Blood orange, redcurrant and pink pepper. Red varieties grown at the Misawa Vineyard are fermented in separate parcels, producing a dry rosé that combines juicy fruit with cool-climate acidity.",
+            "nameZh": "中央葡萄酒莊，赤霞珠粉紅葡萄酒，山梨，日本",
+            "priceZh": "杯裝 $198 · 原瓶 $980",
+            "noteZh": "血橙、紅加侖子及粉紅胡椒。Misawa葡萄園的紅葡萄品種分別發酵，釀成一款乾爽粉紅酒，揉合多汁果味與涼爽產區的明快酸度。"
           }
         ]
       },
       {
         "name": "Red",
+        "nameZh": "紅葡萄酒",
         "items": [
           {
             "v": "2022",
             "name": "Pinot Noir, Domaine Rewa, Central Otago, New Zealand",
             "price": "Glass $198 · Bottle $980",
             "section": "Red",
-            "note": "Cherry, preserved strawberry and dried herb. This small Central Otago estate uses organic and biodynamic farming to produce a finely structured, savoury expression of its Pisa Range site."
+            "note": "Cherry, preserved strawberry and dried herb. This small Central Otago estate uses organic and biodynamic farming to produce a finely structured, savoury expression of its Pisa Range site.",
+            "nameZh": "雷瓦酒莊，黑皮諾紅葡萄酒，中奧塔哥，紐西蘭",
+            "priceZh": "杯裝 $198 · 原瓶 $980",
+            "noteZh": "櫻桃、蜜餞草莓及乾燥香草。這座中奧塔哥小型酒莊採用有機及生物動力法耕作，呈現Pisa Range園地結構細緻、帶鹹鮮感的一面。"
           },
           {
             "v": "2020",
             "name": "Sangiovese Grosso, Castello Banfi, Brunello di Montalcino, Tuscany, Italy",
             "price": "Glass $298 · Bottle $1,480",
             "section": "Red",
-            "note": "Red cherry, wild herbs and tobacco. Banfi's extensive vineyard research programme has helped define a modern expression of Brunello while retaining Sangiovese character."
+            "note": "Red cherry, wild herbs and tobacco. Banfi's extensive vineyard research programme has helped define a modern expression of Brunello while retaining Sangiovese character.",
+            "nameZh": "班菲酒莊，布魯奈羅蒙塔希諾紅葡萄酒，托斯卡納，意大利",
+            "priceZh": "杯裝 $298 · 原瓶 $1,480",
+            "noteZh": "紅櫻桃、野生香草及煙草。Banfi廣泛的葡萄園研究，塑造出現代風格的Brunello，同時保留桑嬌維塞的品種特色。"
           },
           {
             "v": "2022",
             "name": "Syrah, \"Monopole Syrah\", Beyond Time, Ningxia, China",
             "price": "Glass $318 · Bottle $1,580",
             "section": "Red",
-            "note": "Black cherry, rose petal and cocoa. This single-vineyard Ningxia Syrah combines ripe dark fruit with floral lift and a polished, finely structured palate."
+            "note": "Black cherry, rose petal and cocoa. This single-vineyard Ningxia Syrah combines ripe dark fruit with floral lift and a polished, finely structured palate.",
+            "nameZh": "時光機酒莊，「獨佔園西拉」紅葡萄酒，寧夏，中國",
+            "priceZh": "杯裝 $318 · 原瓶 $1,580",
+            "noteZh": "黑櫻桃、玫瑰花瓣及可可。這款寧夏單一葡萄園西拉融合成熟深色水果、花香與拋光般細緻的結構。"
           },
           {
             "v": "2021",
             "name": "Zinfandel, \"Geyserville\", Ridge Vineyards, Alexander Valley, USA",
             "price": "Glass $338 · Bottle $1,680",
             "section": "Red",
-            "note": "Blackberry, plum and black pepper. Drawn from Ridge's historic Geyserville vineyard, this old-vine field blend combines Zinfandel with Carignane, Petite Sirah and Alicante Bouschet for unusual depth and complexity."
+            "note": "Blackberry, plum and black pepper. Drawn from Ridge's historic Geyserville vineyard, this old-vine field blend combines Zinfandel with Carignane, Petite Sirah and Alicante Bouschet for unusual depth and complexity.",
+            "nameZh": "嶺脊酒莊，「蓋瑟維爾」金粉黛紅葡萄酒，亞歷山大谷，美國",
+            "priceZh": "杯裝 $338 · 原瓶 $1,680",
+            "noteZh": "黑莓、李子及黑胡椒。取材自Ridge歷史悠久的Geyserville葡萄園；此老藤田間混釀結合仙粉黛、佳麗釀、小西拉及Alicante Bouschet，層次深邃而複雜。"
           },
           {
             "v": "2020",
             "name": "Pinot Noir, Bouchard Père & Fils, 1er Cru Les Cailles, Nuits-St-Georges, France",
             "price": "Glass $498 · Bottle $2,480",
             "section": "Red",
-            "note": "Red berries, rose petal and liquorice. From one of Nuits-Saint-Georges’ most respected Premier Cru sites, this cuvée balances deep fruit concentration with mineral tension and fine-grained tannins."
+            "note": "Red berries, rose petal and liquorice. From one of Nuits-Saint-Georges’ most respected Premier Cru sites, this cuvée balances deep fruit concentration with mineral tension and fine-grained tannins.",
+            "nameZh": "布夏父子酒莊，「雷凱園」一級園黑皮諾紅葡萄酒，紐伊聖喬治，法國",
+            "priceZh": "杯裝 $498 · 原瓶 $2,480",
+            "noteZh": "紅莓、玫瑰花瓣及甘草。來自紐伊聖喬治最受推崇的一級園之一，此酒平衡深厚果味、礦物張力與細緻單寧。"
           },
           {
             "v": "2019",
             "name": "Cabernet Sauvignon, Château Clerc-Milon, Pauillac, Bordeaux, France",
             "price": "Glass $538 · Bottle $2,680",
             "section": "Red",
-            "note": "Blackcurrant, violet and cedar. This Cabernet-led Pauillac combines concentrated fruit with refined tannins and vivid freshness."
+            "note": "Blackcurrant, violet and cedar. This Cabernet-led Pauillac combines concentrated fruit with refined tannins and vivid freshness.",
+            "nameZh": "克拉米倫酒莊，赤霞珠紅葡萄酒，波雅克，波爾多，法國",
+            "priceZh": "杯裝 $538 · 原瓶 $2,680",
+            "noteZh": "黑加侖子、紫羅蘭及雪松。這款以赤霞珠主導的波亞克，結合濃郁果味、精緻單寧與鮮活清新感。"
           }
         ]
       },
       {
         "name": "Dessert",
+        "nameZh": "甜葡萄酒",
         "items": [
           {
             "v": "2024",
             "name": "La Spinetta, Bricco Quaglia Moscato d’Asti, Piedmont, Italy",
             "price": "Glass $168 · Bottle $840",
             "section": "Dessert",
-            "note": "Apricot, jasmine and lime zest. The original single-vineyard Moscato d’Asti from La Spinetta, offering gentle mousse, vibrant aromatics and natural sweetness balanced by refreshing acidity."
+            "note": "Apricot, jasmine and lime zest. The original single-vineyard Moscato d’Asti from La Spinetta, offering gentle mousse, vibrant aromatics and natural sweetness balanced by refreshing acidity.",
+            "nameZh": "史碧涅塔酒莊，「鵪鶉山丘」莫斯卡托甜葡萄酒，皮埃蒙特，意大利",
+            "priceZh": "杯裝 $168 · 原瓶 $840",
+            "noteZh": "杏桃、茉莉及青檸皮。La Spinetta首款單一葡萄園阿斯蒂莫斯卡托，氣泡柔和、香氣鮮明，天然甜味由清爽酸度平衡。"
           },
           {
             "v": "2020",
             "name": "Semillon, Prince de Saint-Aubin, Sauternes, France",
             "price": "Glass $210 · Bottle $1,050",
             "section": "Dessert",
-            "note": "Apricot, honey and acacia blossom. This Sémillon-led Bordeaux blend offers the concentrated sweetness associated with Sauternes in a direct, approachable style."
+            "note": "Apricot, honey and acacia blossom. This Sémillon-led Bordeaux blend offers the concentrated sweetness associated with Sauternes in a direct, approachable style.",
+            "nameZh": "聖奧賓王子酒莊，賽美蓉甜葡萄酒，蘇玳，法國",
+            "priceZh": "杯裝 $210 · 原瓶 $1,050",
+            "noteZh": "杏桃、蜂蜜及洋槐花。這款以賽美蓉為主的波爾多混釀，以直接易飲的風格呈現蘇玳招牌的濃郁甜美。"
           },
           {
             "v": "2016",
             "name": "Muscat, \"Clovine Sweet Muscat\", Puchang, Xinjiang, China",
             "price": "Glass $298 · Bottle $1,480",
             "section": "Dessert",
-            "note": "Lychee, honey and clove. Made from organically grown Muscat in Xinjiang’s Turpan Valley, this deeply coloured sweet wine retains balancing acidity and distinctive aromatic complexity."
+            "note": "Lychee, honey and clove. Made from organically grown Muscat in Xinjiang’s Turpan Valley, this deeply coloured sweet wine retains balancing acidity and distinctive aromatic complexity.",
+            "nameZh": "蒲昌酒莊，「丁香」麝香甜葡萄酒，新疆，中國",
+            "priceZh": "杯裝 $298 · 原瓶 $1,480",
+            "noteZh": "荔枝、蜂蜜及丁香。採用新疆吐魯番盆地有機種植的麝香葡萄釀製；此色澤深濃的甜酒保留平衡酸度與獨特複雜香氣。"
           }
         ]
       },
       {
         "name": "Chinese Baijiu & Huadiaojiu",
+        "nameZh": "中國白酒及花雕酒",
         "items": [
           {
             "v": "",
@@ -222,7 +296,9 @@ window.WINE_DATA = [
             "price": "Glass (100ml) $585 · Bottle $2,850",
             "section": "Chinese Baijiu & Huadiaojiu",
             "note": "Roasted grain, dried fruit and liquorice. Crafted from mature reserve stocks and aged base spirits, this classic sauce-aroma bottling combines richness with notable refinement.",
-            "nameZh": "珍酒 珍十五"
+            "nameZh": "珍酒 珍十五",
+            "priceZh": "杯裝（100毫升）$585 · 原瓶 $2,850",
+            "noteZh": "烤穀物、乾果及甘草。以成熟珍藏基酒及陳年原酒釀製，這款經典醬香型白酒豐潤而不失細緻。"
           },
           {
             "v": "",
@@ -230,33 +306,45 @@ window.WINE_DATA = [
             "price": "Glass (250ml) $388",
             "section": "Chinese Baijiu & Huadiaojiu",
             "note": "Walnut, dried fig and caramel. Concentrated but controlled, with textural tannins and freshness carrying the savoury detail.",
-            "nameZh": "咸亨・雕皇25年大葫蘆"
+            "nameZh": "咸亨・雕皇25年大葫蘆",
+            "priceZh": "杯裝（250毫升）$388",
+            "noteZh": "核桃、無花果乾及焦糖。濃郁而收斂，質感單寧與清新感承托鮮味細節。"
           }
         ]
       },
       {
         "name": "Alcohol-removed Wine",
+        "nameZh": "無酒精葡萄酒",
         "items": [
           {
             "v": "NV",
             "name": "Pierre Chavin, Pierre Zero Sparkling Chardonnay, France",
             "price": "Glass $150 · Bottle $600",
             "section": "Alcohol-removed Wine",
-            "note": "Peach, lychee and tropical fruit. This alcohol-free sparkling Chardonnay delivers bright fruit character, gentle bubbles and a clean, refreshing finish."
+            "note": "Peach, lychee and tropical fruit. This alcohol-free sparkling Chardonnay delivers bright fruit character, gentle bubbles and a clean, refreshing finish.",
+            "nameZh": "皮耶夏凡，零酒精氣泡莎當妮，法國",
+            "priceZh": "杯裝 $150 · 原瓶 $600",
+            "noteZh": "蜜桃、荔枝及熱帶水果。這款無酒精氣泡莎當妮果味明亮、氣泡柔和，收結潔淨清新。"
           },
           {
             "v": "NV",
             "name": "Pierre Chavin, Pierre Zero Chardonnay, France",
             "price": "Glass $130 · Bottle $600",
             "section": "Alcohol-removed Wine",
-            "note": "Green apple, pear and citrus. An alcohol-free Chardonnay focused on fresh orchard fruit and straightforward drinkability with a crisp finish."
+            "note": "Green apple, pear and citrus. An alcohol-free Chardonnay focused on fresh orchard fruit and straightforward drinkability with a crisp finish.",
+            "nameZh": "皮耶夏凡，零酒精莎當妮，法國",
+            "priceZh": "杯裝 $130 · 原瓶 $600",
+            "noteZh": "青蘋果、梨及柑橘。這款無酒精莎當妮著重清新的果園水果風味，口感直接易飲，收結爽脆。"
           },
           {
             "v": "NV",
             "name": "Pierre Chavin, Pierre Zero Merlot, France",
             "price": "Glass $130 · Bottle $600",
             "section": "Alcohol-removed Wine",
-            "note": "Black cherry, plum and raspberry. This alcohol-free Merlot emphasises ripe fruit and softness, offering a lighter alternative to traditional red wine."
+            "note": "Black cherry, plum and raspberry. This alcohol-free Merlot emphasises ripe fruit and softness, offering a lighter alternative to traditional red wine.",
+            "nameZh": "皮耶夏凡，零酒精梅洛，法國",
+            "priceZh": "杯裝 $130 · 原瓶 $600",
+            "noteZh": "黑櫻桃、李子及覆盆子。這款無酒精梅洛著重成熟果味與柔和口感，是傳統紅酒的輕盈替代選擇。"
           }
         ]
       }

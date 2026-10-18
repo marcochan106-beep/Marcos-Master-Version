@@ -76,13 +76,13 @@ const PRE_SOMMELIER_IDS=new Set(['c0','c3','c4','c5']);
 const GROUPS={
 
 c2:[
-  {name:'Champagne & Sparkling',sections:['Champagne','Sparkling']},
-  {name:'White',sections:['White']},
-  {name:'Rose',sections:['Rose']},
-  {name:'Red',sections:['Red']},
-  {name:'Dessert',sections:['Dessert']},
-  {name:'Chinese Baijiu & Huadiaojiu',sections:['Chinese Baijiu & Huadiaojiu']},
-  {name:'Alcohol-removed Wine',sections:['Alcohol-removed Wine']}
+  {name:'Champagne & Grower Sparkling',nameZh:'香檳及小農氣泡葡萄酒',sections:['Champagne','Grower Sparkling']},
+  {name:'White',nameZh:'白葡萄酒',sections:['White']},
+  {name:'Rose',nameZh:'粉紅葡萄酒',sections:['Rose']},
+  {name:'Red',nameZh:'紅葡萄酒',sections:['Red']},
+  {name:'Dessert',nameZh:'甜葡萄酒',sections:['Dessert']},
+  {name:'Chinese Baijiu & Huadiaojiu',nameZh:'中國白酒及花雕酒',sections:['Chinese Baijiu & Huadiaojiu']},
+  {name:'Alcohol-removed Wine',nameZh:'無酒精葡萄酒',sections:['Alcohol-removed Wine']}
 ],
 
 c6:[
@@ -182,7 +182,7 @@ function navR(){
   ].includes(c.title)
     ? '<span class="featured-star">★</span>' + esc(pick(c,'title'))
     : esc(pick(c,'title'))
-}</span>${has?`<span class="chev">${open?'−':'+'}</span>`:''}</button>${has?`<div class="subnav ${open?'show':''}">${kids.map(g=>`<button class="navsub ${c.id===current&&activeGroup===g.name?'active':''}" data-cat="${c.id}" data-group="${esc(g.name)}">${esc(g.name)}</button>`).join('')}</div>`:''}</div>`
+}</span>${has?`<span class="chev">${open?'−':'+'}</span>`:''}</button>${has?`<div class="subnav ${open?'show':''}">${kids.map(g=>`<button class="navsub ${c.id===current&&activeGroup===g.name?'active':''}" data-cat="${c.id}" data-group="${esc(g.name)}">${esc(pick(g,'name'))}</button>`).join('')}</div>`:''}</div>`
  }).join('');
  nav.querySelectorAll('.navcat').forEach(btn=>btn.onclick=()=>{const id=btn.dataset.cat,c=C.find(x=>x.id===id),has=navChildren(c).length>0;current=id;activeGroup=null;q.value='';openCat=has?(openCat===id?'':id):'';navR();render();scrollTo({top:0,behavior:'smooth'})});
  nav.querySelectorAll('.navsub').forEach(btn=>btn.onclick=()=>{
@@ -197,16 +197,24 @@ function navR(){
 }
 function card(x,category,section){
   const key=wineKey(x),sold=isSoldOut(key);
+
+  const displayPrice=
+    lang==='zh'
+      ? String(x.price)
+          .replace(/\bGlass\b/gi,'杯裝')
+          .replace(/\bBottle\b/gi,'瓶裝')
+      : String(x.price);
+
   return `<article class="wine ${sold?'sold-out':''}" data-wine-key="${esc(key)}">
     <button class="row" aria-expanded="false">
       <span class="v"><span>${x.v}</span>${stockDotHtml(key)}</span>
-      <span class="name">${esc(x.name)}</span>
+      <span class="name">${esc(pick(x,'name'))}</span>
       <span class="price">
-${esc(x.price).replace(/ · /g,'<br>')}
+${esc(displayPrice).replace(/ · /g,'<br>')}
 </span>
       <span class="plus">+</span>
     </button>
-    <div class="inside"><div>${esc(x.note).replace(/\n/g,'<br>')}</div><button type="button" class="mark-wine" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(x.name)}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button></div>
+    <div class="inside"><div>${esc(pick(x,'note')).replace(/\n/g,'<br>')}</div><button type="button" class="mark-wine" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(pick(x,'name'))}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button></div>
   </article>`
 }
 function featureNote(note){
@@ -222,11 +230,11 @@ function featureCard(x,category,section){
       <div class="wotm-summary">
         <div class="wotm-vintage"><span>${esc(x.v)}</span>${stockDotHtml(key)}</div>
         <h2>${esc(pick(x,'name'))}</h2>
-        <div class="wotm-prices">${String(pick(x,'price')??'').split(/\s*·\s*/).filter(Boolean).map(price=>`<div class="wotm-price-line">${esc(price)}</div>`).join('')}</div>
+        <div class="wotm-prices">${String(lang==='zh'?String(pick(x,'price')??'').replace(/\bGlass\b/gi,'杯裝').replace(/\bBottle\b/gi,'瓶裝'):(pick(x,'price')??'')).split(/\s*·\s*/).filter(Boolean).map(price=>`<div class="wotm-price-line">${esc(price)}</div>`).join('')}</div>
       </div>
     </div>
     <div class="wotm-copy">${featureNote(pick(x,'note'))}</div>
-    <button type="button" class="mark-wine feature-mark" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(x.name)}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button>
+    <button type="button" class="mark-wine feature-mark" ${sold?'disabled aria-disabled="true"':''} data-key="${esc(key)}" data-category="${esc(category.id)}" data-type="${esc(wineType(section.name,category.title,x))}" data-v="${esc(x.v)}" data-name="${esc(pick(x,'name'))}" data-price="${esc(x.price)}">☆ <span>${lang==='zh'?'按住以標記此酒':'Hold to mark this wine'}</span></button>
   </section>`;
 }
 function bind(){main.querySelectorAll('.row').forEach(b=>b.onclick=()=>{const a=b.closest('.wine'),o=a.classList.toggle('open');b.setAttribute('aria-expanded',o)});bindStockDots();bindMarkButtons();}function render(){const query=q.value.trim().toLowerCase();if(query){let groups=[];C.forEach(c=>c.sections.forEach(s=>{let items=s.items.filter(x=>(c.title+' '+s.name+' '+x.v+' '+x.name+' '+x.price+' '+x.note).toLowerCase().includes(query));if(items.length)groups.push({title:c.title+' · '+s.name,items,category:c,section:s})}));let count=groups.reduce((a,g)=>a+g.items.length,0);st.textContent='Search results';meta.textContent=totalSelections+' selections · Updated '+updated;main.innerHTML=`<section class="hero"><div class="kicker">Search</div><h2>${esc(q.value)}</h2><p>${count} matching selections</p></section>`+(groups.length?groups.map(g=>`<section class="section"><h3>${esc(g.title)}</h3>${g.items.map(x=>card(x,g.category,g.section)).join('')}</section>`).join(''):'<div class="empty">No matching selection found.</div>');bind();return}let c=C.find(x=>x.id===current)||C[0];st.textContent='';meta.textContent=totalSelections+' '+ui().selections+' · '+ui().updated+' '+updated;const sectionKey=value=>String(value??'')
@@ -248,4 +256,4 @@ if(c.id==='c0'&&!group){
   bindMarkButtons();
   return;
 }
-main.innerHTML=`<section class="hero"><div class="kicker">Tin Lung Heen${group?' · '+esc(c.title):''}</div><h2>${esc(group?group.name:c.title)}</h2></section>`+sections.map(s=>`<section class="section"><h3>${esc(s.name)}</h3>${s.items.map(x=>card(x,c,s)).join('')}</section>`).join('')+`<div class="legal">All prices are in HK$ and subject to 10% service charge. All wines are inspected for quality. Wines priced over HK$10,000 are sold "AS-IS"; no return or refund after the wine is opened.</div>`;bind()}q.oninput=render;navR();render();startStockSync();
+main.innerHTML=`<section class="hero"><div class="kicker">Tin Lung Heen${group?' · '+esc(pick(c,'title')):''}</div><h2>${esc(group?pick(group,'name'):pick(c,'title'))}</h2></section>`+sections.map(s=>`<section class="section"><h3>${esc(pick(s,'name'))}</h3>${s.items.map(x=>card(x,c,s)).join('')}</section>`).join('')+`<div class="legal">All prices are in HK$ and subject to 10% service charge. All wines are inspected for quality. Wines priced over HK$10,000 are sold "AS-IS"; no return or refund after the wine is opened.</div>`;bind()}q.oninput=render;navR();render();startStockSync();
