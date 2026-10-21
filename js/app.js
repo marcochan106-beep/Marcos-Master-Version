@@ -98,7 +98,22 @@ async function writeSharedStock(key,sold){saveLocalStockStatus();if(!stockRef)re
 function startStockSync(){if(!window.firebase){console.warn('Firebase SDK unavailable; using this device only.');return;}try{if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);stockDatabase=firebase.database();
 startSiteEnabledSync();
 startRemoteLockSync();stockRef=stockDatabase.ref('wineStock');stockRef.once('value').then(snapshot=>{if(!snapshot.exists()&&Object.keys(initialLocalStockStatus).length){const seed={};Object.keys(initialLocalStockStatus).forEach(key=>{if(initialLocalStockStatus[key]==='out')seed[stockId(key)]={key,status:'out',updatedAt:firebase.database.ServerValue.TIMESTAMP};});if(Object.keys(seed).length)return stockRef.update(seed);}}).catch(console.error);stockRef.on('value',snapshot=>{stockSyncReady=true;applySharedStock(snapshot.val());},error=>{stockSyncReady=false;console.error('Stock sync unavailable:',error);});}catch(error){console.error('Firebase startup failed:',error);}}
-function stockDotHtml(key){const sold=isSoldOut(key),label=lang==='zh'?(sold?'售罄，按住兩秒更改':'有貨，按住兩秒更改'):(sold?'Sold out. Hold for two seconds to change':'In stock. Hold for two seconds to change');return `<span class="stock-dot ${sold?'sold-out':'in-stock'}" data-stock-key="${esc(key)}" role="button" tabindex="0" aria-label="${esc(label)}" title="${esc(label)}"></span>`;}
+function stockDotHtml(key){
+  const sold=isSoldOut(key);
+
+  const label=lang==='zh'
+    ? (sold?'售罄，按一下改為有貨':'有貨，按一下改為售罄')
+    : (sold?'Sold out. Tap once to mark in stock':'In stock. Tap once to mark sold out');
+
+  return `<span
+    class="stock-dot ${sold?'sold-out':'in-stock'}"
+    data-stock-key="${esc(key)}"
+    role="button"
+    tabindex="0"
+    aria-label="${esc(label)}"
+    title="${esc(label)}"
+  ></span>`;
+}
 async function confirmStockChange(key){
 
   if(!staffUnlocked()){
