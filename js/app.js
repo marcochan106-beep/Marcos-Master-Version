@@ -99,9 +99,89 @@ function startStockSync(){if(!window.firebase){console.warn('Firebase SDK unavai
 startSiteEnabledSync();
 startRemoteLockSync();stockRef=stockDatabase.ref('wineStock');stockRef.once('value').then(snapshot=>{if(!snapshot.exists()&&Object.keys(initialLocalStockStatus).length){const seed={};Object.keys(initialLocalStockStatus).forEach(key=>{if(initialLocalStockStatus[key]==='out')seed[stockId(key)]={key,status:'out',updatedAt:firebase.database.ServerValue.TIMESTAMP};});if(Object.keys(seed).length)return stockRef.update(seed);}}).catch(console.error);stockRef.on('value',snapshot=>{stockSyncReady=true;applySharedStock(snapshot.val());},error=>{stockSyncReady=false;console.error('Stock sync unavailable:',error);});}catch(error){console.error('Firebase startup failed:',error);}}
 function stockDotHtml(key){const sold=isSoldOut(key),label=lang==='zh'?(sold?'售罄，按住兩秒更改':'有貨，按住兩秒更改'):(sold?'Sold out. Hold for two seconds to change':'In stock. Hold for two seconds to change');return `<span class="stock-dot ${sold?'sold-out':'in-stock'}" data-stock-key="${esc(key)}" role="button" tabindex="0" aria-label="${esc(label)}" title="${esc(label)}"></span>`;}
-const stockDialog=document.createElement('dialog');stockDialog.className='stock-dialog';stockDialog.innerHTML='<form method="dialog" class="stock-dialog-card"><h3 class="stock-dialog-title"></h3><p class="stock-dialog-copy"></p><div class="stock-dialog-actions"><button value="cancel" class="stock-cancel"></button><button value="confirm" class="stock-confirm"></button></div></form>';document.body.appendChild(stockDialog);
-function confirmStockChange(key){if(!staffUnlocked()){showStaffLogin();return;}const sold=isSoldOut(key),nextSold=!sold;stockDialog.querySelector('.stock-dialog-title').textContent=lang==='zh'?(nextSold?'標記為售罄？':'標記為有貨？'):(nextSold?'Mark as sold out?':'Mark as in stock?');stockDialog.querySelector('.stock-dialog-copy').textContent=lang==='zh'?(nextSold?'確認後，此酒將顯示為售罄，並不能被選取。':'確認後，此酒將重新顯示為有貨。'):(nextSold?'This wine will appear sold out and cannot be selected.':'This wine will appear in stock again.');stockDialog.querySelector('.stock-cancel').textContent=lang==='zh'?'取消':'Cancel';stockDialog.querySelector('.stock-confirm').textContent=lang==='zh'?'確認':'Confirm';stockDialog.returnValue='';stockDialog.showModal();stockDialog.onclose=async()=>{if(stockDialog.returnValue!=='confirm')return;if(nextSold)stockStatus[key]='out';else delete stockStatus[key];saveLocalStockStatus();if(nextSold&&markedWines[0]?.key===key)markedWines=[];render();updateMarkerUI();try{await writeSharedStock(key,nextSold);}catch(error){console.error('Unable to sync stock change:',error);alert(lang==='zh'?'未能同步至其他裝置，請檢查網絡後再試。':'Could not sync to other devices. Please check the connection and try again.');}};}
-function bindStockDots(){main.querySelectorAll('.stock-dot').forEach(dot=>{let timer=null;const stop=()=>{if(timer)clearTimeout(timer);timer=null;dot.classList.remove('holding');};dot.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();stop();dot.classList.add('holding');timer=setTimeout(()=>{timer=null;dot.classList.remove('holding');confirmStockChange(dot.dataset.stockKey);},2000);});['pointerup','pointercancel','pointerleave'].forEach(type=>dot.addEventListener(type,e=>{e.stopPropagation();stop();}));dot.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();});dot.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){e.preventDefault();confirmStockChange(dot.dataset.stockKey);}});dot.addEventListener('contextmenu',e=>e.preventDefault());});}
+async function confirmStockChange(key){
+
+  if(!staffUnlocked()){
+    showStaffLogin();
+    return;
+  }
+
+  const sold=isSoldOut(key);
+  const nextSold=!sold;
+
+  if(nextSold){
+    stockStatus[key]='out';
+  }else{
+    delete stockStatus[key];
+  }
+
+  saveLocalStockStatus();
+
+  if(nextSold && markedWines[0]?.key===key){
+    markedWines=[];
+  }
+
+  render();
+  updateMarkerUI();
+
+  try{
+    await writeSharedStock(key,nextSold);
+  }catch(error){
+
+    console.error(
+      'Unable to sync stock change:',
+      error
+    );
+
+    alert(
+      lang==='zh'
+        ? '未能同步至其他裝置，請檢查網絡後再試。'
+        : 'Could not sync to other devices. Please check the connection and try again.'
+    );
+
+  }
+
+}
+function bindStockDots(){
+
+  main.querySelectorAll('.stock-dot').forEach(dot=>{
+
+    dot.addEventListener('click',e=>{
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      confirmStockChange(
+        dot.dataset.stockKey
+      );
+
+    });
+
+    dot.addEventListener('keydown',e=>{
+
+      if(
+        (e.key==='Enter' || e.key===' ')
+        && !e.repeat
+      ){
+
+        e.preventDefault();
+
+        confirmStockChange(
+          dot.dataset.stockKey
+        );
+
+      }
+
+    });
+
+    dot.addEventListener(
+      'contextmenu',
+      e=>e.preventDefault()
+    );
+
+  });
+
+}
 function markerText(x){return (x.v?x.v+' · ':'')+x.name;}
 function wineType(sectionName,categoryTitle,x){const text=(sectionName+' '+categoryTitle+' '+(x.style||'')+' '+(x.name||'')).toLowerCase();if(/champagne|sparkling|prosecco|cava|franciacorta|sekt/.test(text))return'sparkling';if(/dessert|sauternes|barsac|tokaji|moscato|sweet|port|madeira|sherry/.test(text))return'dessert';if(/rosé|rose/.test(text))return'rose';if(/red|rouge|rosso|tinto|barolo|barbaresco|burgundy rouge/.test(text))return'red';if(/white|blanc|bianco|chablis|riesling|sauvignon|chardonnay/.test(text))return'white';return'other';}
 function typeIcon(type){return{sparkling:'✦',white:'●',red:'●',rose:'●',dessert:'◆',other:'○'}[type]||'○';}
